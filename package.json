@@ -1,0 +1,17 @@
+{
+  "name": "allocate",
+  "version": "1.0.0",
+  "description": "allocate time in your Google Calendar to prevent procastination",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Google",
+    "Calendar",
+    "OAuth2",
+    "procrastination"
+  ],
+  "author": "CMU IS",
+  "license": "UNLICENSED"
+}
