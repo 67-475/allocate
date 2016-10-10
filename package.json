@@ -17,6 +17,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "google-auth-library": "^0.9.8",
-    "googleapis": "^14.0.0"
+    "googleapis": "^14.0.0",
+    "morgan": "^1.7.0"
   }
 }
