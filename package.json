@@ -13,7 +13,7 @@
     "OAuth2",
     "procrastination"
   ],
-  "author": "CMU IS",
+  "author": "CMU 475 IS",
   "license": "UNLICENSED",
   "dependencies": {
     "google-auth-library": "^0.9.8",
