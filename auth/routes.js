@@ -60,7 +60,7 @@ function authorize (req, res) {
       oauth2Clients[cookie].setCredentials(token)
     }
 
-    res.redirect('/home')
+    res.redirect('/')
   })
 }
 
@@ -93,5 +93,5 @@ exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
-  app.get('/home', is_logged_in, home)
+  app.get('/', is_logged_in, home)
 }
