@@ -51,7 +51,7 @@ exports.init = (app) => {
 
   app.get('/auth', (req, res) => {
     server_auth.getToken(req.query.code, (err, token) => {
-      const cookie = words({ exactly: 5, join: ' ' })
+      const cookie = words({ exactly: 5, join: '-' })
       oauth2Clients[cookie] = generate_auth()
 
       if(!err) {
