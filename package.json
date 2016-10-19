@@ -2,10 +2,10 @@
   "name": "allocate",
   "version": "1.0.0",
   "description": "allocate time in your Google Calendar to prevent procastination",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "keywords": [
     "Google",
@@ -16,8 +16,10 @@
   "author": "CMU IS",
   "license": "UNLICENSED",
   "dependencies": {
+    "cookie-parser": "^1.4.3",
     "google-auth-library": "^0.9.8",
     "googleapis": "^14.0.0",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "random-words": "0.0.1"
   }
 }

@@ -1,20 +1,37 @@
 var google = require('googleapis')
 var calendar = google.calendar('v3')
+var words = require('random-words')
 var OAuth2 = google.auth.OAuth2
 
 // preprocess client and login link
 var credentials = require('./config/auth.json')
-var oauth2Client = new OAuth2(
-  credentials.client_id,
-  credentials.client_secret,
-  credentials.redirect_uris[1]
-)
+var oauth2Clients = {}
+
+function generate_auth() {
+  return new OAuth2(
+    credentials.client_id,
+    credentials.client_secret,
+    credentials.redirect_uris[1]
+  )
+}
+
+var server_auth = generate_auth()
 
 var scope = ['https://www.googleapis.com/auth/calendar'];
-var login_link = oauth2Client.generateAuthUrl({
+var login_link = server_auth.generateAuthUrl({
   scope: scope,
   redirect_uri: 'http://localhost:8080/auth'
 });
+
+function is_logged_in (req, res, next) {
+    console.log('here')
+    console.log(req.cookies)
+    if(req.cookies.auth) {
+      next()
+    } else {
+      res.redirect('/login')
+    }
+}
 
 exports.init = (app) => {
   app.get('/login', (req, res) => {
@@ -24,23 +41,33 @@ exports.init = (app) => {
   })
 
   app.get('/logout', (req, res) => {
-    oauth2Client.revokeCredentials((err, body, response) => {
+    var leaving = oauth2Clients[req.cookies.auth]
+    delete oauth2Clients[req.cookies.auth]
+    res.clearCookie('auth')
+
+    leaving.revokeCredentials((err, body, response) => {
       res.redirect('/login')
     })
+
   })
 
   app.get('/auth', (req, res) => {
-    oauth2Client.getToken(req.query.code, (err, token) => {
+    server_auth.getToken(req.query.code, (err, token) => {
+      const cookie = words({ exactly: 5, join: ' ' })
+      oauth2Clients[cookie] = generate_auth()
+
+      res.cookie('auth', cookie)
       if(!err) {
-        oauth2Client.setCredentials(token);
+        oauth2Clients[cookie].setCredentials(token)
       }
-      res.redirect('/home');
+
+      res.redirect('/home')
     })
   })
 
-  app.get('/home', (req, res) => {
+  app.get('/home', is_logged_in, (req, res) => {
     calendar.events.list({
-      auth: oauth2Client,
+      auth: oauth2Clients[req.cookies.auth],
       calendarId: 'primary',
       timeMin: (new Date()).toISOString(),
       maxResults: 10,
