@@ -24,8 +24,6 @@ var login_link = server_auth.generateAuthUrl({
 });
 
 function is_logged_in (req, res, next) {
-    console.log('here')
-    console.log(req.cookies)
     if(req.cookies.auth) {
       next()
     } else {
@@ -56,8 +54,8 @@ exports.init = (app) => {
       const cookie = words({ exactly: 5, join: ' ' })
       oauth2Clients[cookie] = generate_auth()
 
-      res.cookie('auth', cookie)
       if(!err) {
+        res.cookie('auth', cookie)
         oauth2Clients[cookie].setCredentials(token)
       }
 
