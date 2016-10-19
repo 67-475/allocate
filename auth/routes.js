@@ -1,10 +1,11 @@
 var google = require('googleapis')
 var calendar = google.calendar('v3')
 var words = require('random-words')
+var scrambler = require('./scrambler')
 var OAuth2 = google.auth.OAuth2
 
 // preprocess client and login link
-var credentials = require('./config/auth.json')
+var credentials = require('../config/auth.json')
 var oauth2Clients = {}
 
 function generate_auth() {
@@ -24,66 +25,73 @@ var login_link = server_auth.generateAuthUrl({
 });
 
 function is_logged_in (req, res, next) {
-    if(req.cookies.auth) {
+    if(req.cookies.auth &&
+      scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
       next()
     } else {
       res.redirect('/login')
     }
 }
 
-exports.init = (app) => {
-  app.get('/login', (req, res) => {
-    res.render('login', {
-      auth_url: login_link
-    })
+function login (req, res) {
+  res.render('login', {
+    auth_url: login_link
   })
+}
 
-  app.get('/logout', (req, res) => {
-    var leaving = oauth2Clients[req.cookies.auth]
-    delete oauth2Clients[req.cookies.auth]
+function logout (req, res) {
+    cookie = scrambler.decrypt(req.cookies.auth)
+    var leaving = oauth2Clients[cookie]
+    delete oauth2Clients[cookie]
     res.clearCookie('auth')
 
     leaving.revokeCredentials((err, body, response) => {
       res.redirect('/login')
     })
+}
 
+function authorize (req, res) {
+  server_auth.getToken(req.query.code, (err, token) => {
+    const cookie = words({ exactly: 5, join: '-' })
+    oauth2Clients[cookie] = generate_auth()
+
+    if(!err) {
+      res.cookie('auth', scrambler.encrypt(cookie))
+      oauth2Clients[cookie].setCredentials(token)
+    }
+
+    res.redirect('/home')
   })
+}
 
-  app.get('/auth', (req, res) => {
-    server_auth.getToken(req.query.code, (err, token) => {
-      const cookie = words({ exactly: 5, join: '-' })
-      oauth2Clients[cookie] = generate_auth()
-
-      if(!err) {
-        res.cookie('auth', cookie)
-        oauth2Clients[cookie].setCredentials(token)
-      }
-
-      res.redirect('/home')
-    })
-  })
-
-  app.get('/home', is_logged_in, (req, res) => {
-    calendar.events.list({
-      auth: oauth2Clients[req.cookies.auth],
-      calendarId: 'primary',
-      timeMin: (new Date()).toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: 'startTime',
-    }, (err, response) => {
-      if(err) {
-        console.log('The API returned: '+ err)
-        res.sendStatus(500)
+function home (req, res) {
+  calendar.events.list({
+    auth: oauth2Clients[scrambler.decrypt(req.cookies.auth)],
+    calendarId: 'primary',
+    timeMin: (new Date()).toISOString(),
+    maxResults: 10,
+    singleEvents: true,
+    orderBy: 'startTime',
+  }, (err, response) => {
+    if(err) {
+      console.log('The API returned: '+ err)
+      res.sendStatus(500)
+    } else {
+      var events = response.items
+      if(events.length == 0) {
+        res.send('No upcoming events')
       } else {
-        var events = response.items
-        if(events.length == 0) {
-          res.send('No upcoming events')
-        } else {
-          events = events.map((event) => event.summary )
-          res.send(JSON.stringify(events))
-        }
+        events = events.map((event) => event.summary )
+        res.send(JSON.stringify(events))
       }
-    })
+    }
   })
+}
+
+exports.init = (app) => {
+
+  app.get('/login', login)
+  app.get('/logout', is_logged_in, logout)
+  app.get('/auth', authorize)
+  app.get('/home', is_logged_in, home)
 }

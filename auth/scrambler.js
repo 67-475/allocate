@@ -11,7 +11,6 @@ function encrypt(text) {
   var cipher = crypto.createCipher(algorithm, password)
   var encrypted = cipher.update(text, 'utf8', 'hex')
   encrypted += cipher.final('hex')
-  // console.log('here')
   return encrypted
 }
 
