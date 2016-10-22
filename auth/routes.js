@@ -12,7 +12,7 @@ function generate_auth() {
   return new OAuth2(
     credentials.client_id,
     credentials.client_secret,
-    credentials.redirect_uris[1]
+    credentials.redirect_uri
   )
 }
 
@@ -21,12 +21,11 @@ var server_auth = generate_auth()
 var scope = ['https://www.googleapis.com/auth/calendar']
 var login_link = server_auth.generateAuthUrl({
   scope: scope,
-  redirect_uri: 'http://localhost:8080/auth'
+  redirect_uri: credentials.redirect_uri
 })
 
 function is_logged_in (req, res, next) {
-    if(req.cookies.auth &&
-      scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
+    if(req.cookies.auth && scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
       next()
     } else {
       res.redirect('/login')
@@ -52,10 +51,10 @@ function logout (req, res) {
 
 function authorize (req, res) {
   server_auth.getToken(req.query.code, (err, token) => {
-    const cookie = words({ exactly: 5, join: '-' })
-    oauth2Clients[cookie] = generate_auth()
 
     if(!err) {
+      const cookie = words({ exactly: 5, join: '-' })
+      oauth2Clients[cookie] = generate_auth()
       res.cookie('auth', scrambler.encrypt(cookie))
       oauth2Clients[cookie].setCredentials(token)
     }
