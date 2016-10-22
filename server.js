@@ -1,15 +1,17 @@
 var express = require('express')
-var app = express();
+var app = express()
 
 // cookies
 var cookieParser = require('cookie-parser')
-app.use(cookieParser());
+app.use(cookieParser())
 
 // set up logs and view engine
-app.use(require('morgan')('dev'));
-app.set('view engine', 'ejs'); // set up ejs for templating
+app.use(require('morgan')('dev'))
+app.set('view engine', 'ejs') // set up ejs for templating
 
-var auth = require('./auth/routes.js');
-auth.init(app);
+// routes
+var auth = require('./auth/routes.js').init(app)
+
+app.use((req, res) => { res.redirect('/') })
 
 app.listen(8080)

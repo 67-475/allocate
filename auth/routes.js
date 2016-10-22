@@ -18,11 +18,11 @@ function generate_auth() {
 
 var server_auth = generate_auth()
 
-var scope = ['https://www.googleapis.com/auth/calendar'];
+var scope = ['https://www.googleapis.com/auth/calendar']
 var login_link = server_auth.generateAuthUrl({
   scope: scope,
   redirect_uri: 'http://localhost:8080/auth'
-});
+})
 
 function is_logged_in (req, res, next) {
     if(req.cookies.auth &&
@@ -82,7 +82,7 @@ function home (req, res) {
         res.send('No upcoming events')
       } else {
         events = events.map((event) => event.summary )
-        res.send(JSON.stringify(events))
+        res.send(events)
       }
     }
   })
