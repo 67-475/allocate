@@ -1,1 +1,35 @@
-<%= events %>
+<html>
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    function addEventToPage(ev) {
+        var eventsDiv = $("#events")
+        console.log(ev.summary)
+
+        var container = $('<div></div>')
+        container.append("<p>" + ev.summary + "</p>")
+
+        eventsDiv.append(container)
+    }
+
+    $(function() {
+        var events = <%- JSON.stringify(events) %>
+        console.log(events)
+        for (var i = 0; i < events.length; i++) {
+            var ev = events[i]
+            addEventToPage(ev)
+        };
+    })
+
+</script>
+</head>
+
+<body>
+    <div id="events">
+    </div>
+</body>
+
+</html>
