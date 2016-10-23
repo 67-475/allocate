@@ -81,7 +81,9 @@ function home (req, res) {
         res.send('No upcoming events')
       } else {
         events = events.map((event) => event.summary )
-        res.send(events)
+        res.render('home', {
+          events: events
+        })
       }
     }
   })
