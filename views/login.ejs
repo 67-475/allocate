@@ -1,1 +1,28 @@
-<a href = '<%= auth_url %>'>Login with Google</a>
+<html>
+
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Allocate</h1>
+            <p class="lead">Simple service to build healthy time management habits.</p>
+            <hr class="my-2">
+            <p>Link to your Google Account to begin using Allocate.</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href='<%= auth_url %>' role="button">Login with Google</a>
+            </p>
+        </div>
+    </div>
+    
+</body>
+
+</html>
