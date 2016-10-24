@@ -14,4 +14,11 @@ var auth = require('./auth/routes.js').init(app)
 
 app.use((req, res) => { res.redirect('/') })
 
-app.listen(8080)
+const port = process.env.PORT || 8080
+app.set('port', port);
+var http = require('http').Server(app)
+
+// Start Application
+http.listen(port, () => {
+    console.log("Server started on port " + port)
+})
