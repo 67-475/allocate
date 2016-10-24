@@ -3,6 +3,7 @@ var request = require('request')
 var scrambler = require('./scrambler')
 var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
+var jsonfile = require('jsonfile')
 
 // preprocess client and login link
 var credentials = require('../config/config.js')
@@ -92,10 +93,24 @@ function getHomeEvent(req, res) {
   })
 }
 
+function getSettings(req, res) {
+  email = scrambler.decrypt(req.cookies.auth)
+  var file = 'db/settings.json'
+  jsonfile.readFile(file, function(err, obj) {
+    if (obj[email] != null) {
+      res.send(obj[email])
+    } else {
+      res.send("Not found - " + email)
+    }
+  })
+
+}
+
 exports.init = (app) => {
 
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
   app.get('/', is_logged_in, getHomeEvent)
+  app.get('/settings', is_logged_in, getSettings)
 }
