@@ -20,11 +20,11 @@
 
         // start/end
         if (ev.start.date != null) {
-            container.append("<td>" + Date(ev.start.date) + "</td")
-            container.append("<td>" + Date(ev.end.date) + "</td")
+            container.append("<td>" + new Date(ev.start.date) + "</td")
+            container.append("<td>" + new Date(ev.end.date) + "</td")
         } else if (ev.start.dateTime != null) {
-            container.append("<td>" + Date(ev.start.dateTime) + "</td")
-            container.append("<td>" + Date(ev.end.dateTime) + "</td")
+            container.append("<td>" + new Date(ev.start.dateTime) + "</td")
+            container.append("<td>" + new Date(ev.end.dateTime) + "</td")
         } else {
             container.append("<td>" + "Unknown" + "</td")
             container.append("<td>" + "Unknown" + "</td")
