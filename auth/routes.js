@@ -103,7 +103,35 @@ function getSettings(req, res) {
       res.send("Not found - " + email)
     }
   })
+}
 
+function postSettings(req, res) {
+  var reqEmail = req.params.email
+  var email = scrambler.decrypt(req.cookies.auth)
+
+  if (reqEmail != email) {
+    res.send("WRONG")
+    return
+  }
+
+  email = reqEmail
+  var file = 'db/settings.json'
+  jsonfile.readFile(file, function(err, obj) {
+    if (obj[email] != null) {
+      obj[email] = req.body
+      // VERY BAD!! Need to add validations to assert the info posted
+      // is correct and appropriate
+      jsonfile.writeFile(file, obj, function(err) {
+        if (err) {
+          res.send("Error posting settings - " + email)
+        } else {
+          res.send("Settings updated - " + email)
+        }
+      })
+    } else {
+      res.send("Not found - " + email)
+    }
+  })
 }
 
 exports.init = (app) => {
@@ -113,4 +141,5 @@ exports.init = (app) => {
   app.get('/auth', authorize)
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettings)
+  app.post('/settings/:email', is_logged_in, postSettings)
 }
