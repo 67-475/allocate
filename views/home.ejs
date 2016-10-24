@@ -10,13 +10,41 @@
 <script type="text/javascript">
 
     function addEventToPage(ev) {
-        var eventsDiv = $("#events")
+        var tbody = $("#tbody")
         console.log(ev.summary)
 
-        var container = $('<div></div>')
-        container.append("<p>" + ev.summary + "</p>")
+        var container = $('<tr></tr>')
 
-        eventsDiv.append(container)
+        // summary
+        container.append("<td>" + ev.summary + "</td>")
+
+        // start/end
+        if (ev.start.date != null) {
+            container.append("<td>" + Date(ev.start.date) + "</td")
+            container.append("<td>" + Date(ev.end.date) + "</td")
+        } else if (ev.start.dateTime != null) {
+            container.append("<td>" + Date(ev.start.dateTime) + "</td")
+            container.append("<td>" + Date(ev.end.dateTime) + "</td")
+        } else {
+            container.append("<td>" + "Unknown" + "</td")
+            container.append("<td>" + "Unknown" + "</td")
+        }
+
+        // location
+        if (ev.location != null) {
+            container.append("<td>" + ev.location + "</td")
+        } else {
+            container.append("<td>" + "Unknown" + "</td")
+        }
+
+        // reminders
+        if (ev.reminders.overrides != null) {
+            container.append("<td>" + ev.reminders.overrides.length + "</td")
+        } else {
+            container.append("<td>" + "None" + "</td")
+        }
+
+        tbody.append(container)
     }
 
     $(function() {
@@ -32,8 +60,19 @@
 </head>
 
 <body>
-    <div id="events">
-    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Summary</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Location</th>
+                <th>Reminders?<th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
 </body>
 
 </html>
