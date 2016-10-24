@@ -1,4 +1,5 @@
 var google = require('googleapis')
+var identitytoolkit = google.identitytoolkit('v3')
 var words = require('random-words')
 var scrambler = require('./scrambler')
 var OAuth2 = google.auth.OAuth2
@@ -17,9 +18,12 @@ function generate_auth() {
 
 var server_auth = generate_auth()
 
-var scope = ['https://www.googleapis.com/auth/calendar']
+var scopes = [
+  'https://www.googleapis.com/auth/calendar',
+  'profile'
+]
 var login_link = server_auth.generateAuthUrl({
-  scope: scope,
+  scope: scopes.join(' '),
   redirect_uri: credentials.redirect_uri
 })
 
@@ -56,9 +60,18 @@ function authorize (req, res) {
       oauth2Clients[cookie] = generate_auth()
       res.cookie('auth', scrambler.encrypt(cookie))
       oauth2Clients[cookie].setCredentials(token)
+
+      identitytoolkit.relyingparty.getAccountInfo({
+        auth: oauth2Clients[cookie]
+      }, (err, response) => {
+        if(err) {
+          console.error(err);
+        }
+        console.log(response)
+        res.redirect('/')
+      })
     }
 
-    res.redirect('/')
   })
 }
 
