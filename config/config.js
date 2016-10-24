@@ -11,5 +11,6 @@ if(env == 'development') {
     auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
     client_secret: process.env.client_secret,
     redirect_uri: process.env.redirect_uri,
+    api_key: process.env.api_key
   }
 }

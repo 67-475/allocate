@@ -1,6 +1,7 @@
-var google = require('googleapis')
 var words = require('random-words')
+var request = require('request')
 var scrambler = require('./scrambler')
+var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
 
 // preprocess client and login link
@@ -17,9 +18,14 @@ function generate_auth() {
 
 var server_auth = generate_auth()
 
-var scope = ['https://www.googleapis.com/auth/calendar']
+var scopes = [
+  'https://www.googleapis.com/auth/calendar',
+  'email',
+  'profile',
+  'https://www.googleapis.com/auth/plus.login'
+]
 var login_link = server_auth.generateAuthUrl({
-  scope: scope,
+  scope: scopes.join(' '),
   redirect_uri: credentials.redirect_uri
 })
 
@@ -50,26 +56,38 @@ function logout (req, res) {
 
 function authorize (req, res) {
   server_auth.getToken(req.query.code, (err, token) => {
-
     if(!err) {
-      const cookie = words({ exactly: 5, join: '-' })
-      oauth2Clients[cookie] = generate_auth()
-      res.cookie('auth', scrambler.encrypt(cookie))
-      oauth2Clients[cookie].setCredentials(token)
+
+      const options = {
+        url: 'https://people.googleapis.com/v1/people/me\?fields\=emailAddresses\&key\=' + credentials.api_key,
+        headers: {
+          'Authorization' : token.token_type + ' ' + token.access_token
+        },
+        method: 'GET'
+      }
+      request(options, (err, response, body) => {
+        const email = JSON.parse(body).emailAddresses[0].value
+        oauth2Clients[email] = generate_auth()
+        res.cookie('auth', scrambler.encrypt(email))
+        oauth2Clients[email].setCredentials(token)
+        res.redirect('/')
+      })
+
     }
 
-    res.redirect('/')
   })
 }
 
 var home = require('../app/home.js')
 
 function getHomeEvent(req, res) {
-  var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
+  email = scrambler.decrypt(req.cookies.auth)
+  var client = oauth2Clients[email]
 
   var events = home(client, (events) => {
     res.render('home', {
-      events: events
+      events: events,
+      email: email
     })
   })
 }
