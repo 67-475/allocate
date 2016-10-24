@@ -1,5 +1,4 @@
 var google = require('googleapis')
-var calendar = google.calendar('v3')
 var words = require('random-words')
 var scrambler = require('./scrambler')
 var OAuth2 = google.auth.OAuth2
@@ -63,36 +62,20 @@ function authorize (req, res) {
   })
 }
 
-var home = require('../app/home.json')
+var home = require('../app/home.js')
 
-// function home (req, res) {
-//   calendar.events.list({
-//     auth: oauth2Clients[scrambler.decrypt(req.cookies.auth)],
-//     calendarId: 'primary',
-//     timeMin: (new Date()).toISOString(),
-//     maxResults: 10,
-//     singleEvents: true,
-//     orderBy: 'startTime',
-//   }, (err, response) => {
-//     if(err) {
-//       console.log('The API returned: '+ err)
-//       res.sendStatus(500)
-//     } else {
-//       var events = response.items
-//       if(events.length == 0) {
-//         res.send('No upcoming events')
-//       } else {
-//         events = events.map((event) => event.summary )
-//         res.send(events)
-//       }
-//     }
-//   })
-// }
+function getHomeEvent(req, res) {
+  var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
+
+  var events = home(client, (events) => {
+    res.send(events)
+  })
+}
 
 exports.init = (app) => {
 
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
-  app.get('/', is_logged_in, home)
+  app.get('/', is_logged_in, getHomeEvent)
 }
