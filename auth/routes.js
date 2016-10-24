@@ -1,7 +1,7 @@
-var google = require('googleapis')
-var identitytoolkit = google.identitytoolkit('v3')
 var words = require('random-words')
+var request = require('request')
 var scrambler = require('./scrambler')
+var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
 
 // preprocess client and login link
@@ -20,7 +20,9 @@ var server_auth = generate_auth()
 
 var scopes = [
   'https://www.googleapis.com/auth/calendar',
-  'profile'
+  'email',
+  'profile',
+  'https://www.googleapis.com/auth/plus.login'
 ]
 var login_link = server_auth.generateAuthUrl({
   scope: scopes.join(' '),
@@ -54,22 +56,23 @@ function logout (req, res) {
 
 function authorize (req, res) {
   server_auth.getToken(req.query.code, (err, token) => {
-
     if(!err) {
-      const cookie = words({ exactly: 5, join: '-' })
-      oauth2Clients[cookie] = generate_auth()
-      res.cookie('auth', scrambler.encrypt(cookie))
-      oauth2Clients[cookie].setCredentials(token)
 
-      identitytoolkit.relyingparty.getAccountInfo({
-        auth: oauth2Clients[cookie]
-      }, (err, response) => {
-        if(err) {
-          console.error(err);
-        }
-        console.log(response)
+      const options = {
+        url: 'https://people.googleapis.com/v1/people/me\?fields\=emailAddresses\&key\=' + credentials.api_key,
+        headers: {
+          'Authorization' : token.token_type + ' ' + token.access_token
+        },
+        method: 'GET'
+      }
+      request(options, (err, response, body) => {
+        const email = JSON.parse(body).emailAddresses[0].value
+        oauth2Clients[email] = generate_auth()
+        res.cookie('auth', scrambler.encrypt(email))
+        oauth2Clients[email].setCredentials(token)
         res.redirect('/')
       })
+
     }
 
   })
@@ -78,11 +81,13 @@ function authorize (req, res) {
 var home = require('../app/home.js')
 
 function getHomeEvent(req, res) {
-  var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
+  email = scrambler.decrypt(req.cookies.auth)
+  var client = oauth2Clients[email]
 
   var events = home(client, (events) => {
     res.render('home', {
-      events: events
+      events: events,
+      email: email
     })
   })
 }
