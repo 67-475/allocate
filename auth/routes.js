@@ -4,7 +4,7 @@ var scrambler = require('./scrambler')
 var OAuth2 = google.auth.OAuth2
 
 // preprocess client and login link
-var credentials = require('../config/auth.json')
+var credentials = require('../config/config.js')
 var oauth2Clients = {}
 
 function generate_auth() {
@@ -68,7 +68,9 @@ function getHomeEvent(req, res) {
   var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
 
   var events = home(client, (events) => {
-    res.send(events)
+    res.render('home', {
+      events: events
+    })
   })
 }
 

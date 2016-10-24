@@ -19,7 +19,6 @@ function home (oauth2Client, callback) {
       if(events.length == 0) {
         callback('No upcoming events')
       } else {
-        events = events.map((event) => event.summary )
         callback(events)
       }
     }
