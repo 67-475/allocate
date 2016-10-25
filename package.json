@@ -4,7 +4,7 @@
   "description": "allocate time in your Google Calendar to prevent procastination",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "npm run lint && mocha",
     "start": "node server.js",
     "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js"
   },
