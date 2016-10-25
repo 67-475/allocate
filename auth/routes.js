@@ -20,8 +20,6 @@ var server_auth = generate_auth()
 
 var scopes = [
   'https://www.googleapis.com/auth/calendar',
-  'email',
-  'profile',
   'https://www.googleapis.com/auth/plus.login'
 ]
 var login_link = server_auth.generateAuthUrl({
