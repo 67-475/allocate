@@ -11,7 +11,8 @@ const rules = [ 'semi',
   'comma-dangle',
   'prefer-template',
   'camelcase',
-  'object-shorthand'
+  'object-shorthand',
+  'no-var'
  ]
 
 rules.forEach((rule) => {

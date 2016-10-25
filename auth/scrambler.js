@@ -1,8 +1,8 @@
 // adapted from:
 // http://lollyrock.com/articles/nodejs-encryption/
 
-var crypto = require('crypto')
-var words = require('random-words')
+const crypto = require('crypto')
+const words = require('random-words')
 
 const algorithm = 'aes-256-ctr'
 const password = words({ exactly: 5, join: '-' })
