@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run lint && mocha",
     "start": "node server.js",
-    "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js"
+    "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js",
+    "docs": "./node_modules/.bin/jsdoc app/*.js auth/*.js config/*.js server.js"
   },
   "keywords": [
     "Google",
@@ -33,6 +34,7 @@
     "eslint-plugin-import": "^2.0.1",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
+    "jsdoc": "^3.4.2",
     "mocha": "^3.1.2"
   }
 }

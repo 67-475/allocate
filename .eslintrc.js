@@ -1,7 +1,8 @@
 var options = {
   'extends': 'airbnb',
   'rules': {
-    'quotes': ['off', 'single']
+    'quotes': ['off', 'single'],
+    'require-jsdoc': ['error']
   },
   "plugins": [
       "react",
