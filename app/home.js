@@ -4,8 +4,8 @@ var google = require('googleapis')
 var calendar = google.calendar('v3')
 
 /**
-  * Pulls Google Calendar
-  * @param {Object} oauth2Client Authorized auth instance of google.auth.OAuth2
+  * Pulls Google Calendar events given a client
+  * @param {OAuth2} oauth2Client Authorized auth instance of google.auth.OAuth2
                                  with which to make API call
   * @param {function} callback function to be called with results of API call
   */
