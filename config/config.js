@@ -1,3 +1,5 @@
+/* eslint import/no-unresolved:0 */
+
 const env = process.env.NODE_ENV || 'development'
 
 module.exports = (env === 'development') ? require('./auth.json') :
