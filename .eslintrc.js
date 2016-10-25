@@ -1,11 +1,21 @@
-module.exports = {
-    'extends': 'airbnb',
-    'rules': {
-        'semi': ['off'],
-        'quotes': ['off', 'single'],
-        'import/newline-after-import': ['off'],
-        'space-before-function-paren': ['off'],
-        'comma-dangle': ['off'],
-        'prefer-template': ['off']
-    }
-};
+var options = {
+  'extends': 'airbnb',
+  'rules': {
+    'quotes': ['off', 'single']
+  }
+}
+
+const rules = [ 'semi',
+  'import/newline-after-import',
+  'space-before-function-paren',
+  'comma-dangle',
+  'prefer-template',
+  'camelcase',
+  'object-shorthand'
+ ]
+
+rules.forEach((rule) => {
+    options.rules[rule] = ['off']
+})
+
+module.exports = options
