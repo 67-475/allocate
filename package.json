@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js"
   },
   "keywords": [
     "Google",
@@ -26,6 +27,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb": "^12.0.0",
     "mocha": "^3.1.2"
   }
 }
