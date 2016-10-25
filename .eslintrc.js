@@ -2,7 +2,12 @@ var options = {
   'extends': 'airbnb',
   'rules': {
     'quotes': ['off', 'single']
-  }
+  },
+  "plugins": [
+      "react",
+      "jsx-a11y",
+      "import"
+  ]
 }
 
 const rules = [ 'semi',
