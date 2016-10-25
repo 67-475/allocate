@@ -6,8 +6,7 @@
   "scripts": {
     "test": "npm run lint && mocha",
     "start": "node server.js",
-    "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js",
-    "docs": "./node_modules/.bin/jsdoc app/*.js auth/*.js config/*.js server.js"
+    "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js"
   },
   "keywords": [
     "Google",
