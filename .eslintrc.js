@@ -12,7 +12,8 @@ const rules = [ 'semi',
   'prefer-template',
   'camelcase',
   'object-shorthand',
-  'no-var'
+  'no-var',
+  'vars-on-top'
  ]
 
 rules.forEach((rule) => {
