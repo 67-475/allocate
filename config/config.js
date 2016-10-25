@@ -1,9 +1,7 @@
 const env = process.env.NODE_ENV || 'development'
 
-if(env == 'development') {
-  module.exports = require('./auth.json')
-} else {
-  module.exports = {
+module.exports = (env === 'development') ? require('./auth.json') :
+  {
     client_id: process.env.client_id,
     project_id: process.env.project_id,
     auth_uri: process.env.auth_uri,
@@ -13,4 +11,3 @@ if(env == 'development') {
     redirect_uri: process.env.redirect_uri,
     api_key: process.env.api_key
   }
-}
