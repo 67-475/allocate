@@ -24,3 +24,8 @@ var http = require('http').Server(app)
 http.listen(port, () => {
   console.log("Server started on port " + port)
 })
+
+// export some data for test
+module.exports = {
+  port: port
+}
