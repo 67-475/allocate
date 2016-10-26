@@ -3,3 +3,5 @@ node_js:
   - '6.2.2'
 notifications:
   email: false
+env:
+  NODE_ENV: 'test'
