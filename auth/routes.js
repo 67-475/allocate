@@ -122,13 +122,13 @@ function getHomeEvent(req, res) {
 
 function getSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
-  levelupDB.get(email, function(err, results) {
+  levelupDB.get(email, (err, results) => {
     if (err) {
       console.error(err)
       res.render('settings')
     } else {
       console.log(results, results.bestTime, results.sleepTime)
-      res.render('settings', {settings: results})
+      res.render('settings', { settings: results })
     }
   })
 }
@@ -137,13 +137,13 @@ function postSettings(req, res) {
   var reqEmail = req.params.email
   var email = scrambler.decrypt(req.cookies.auth)
 
-  if (reqEmail != email) {
+  if (reqEmail !== email) {
     res.send(304)
     return
   }
 
   email = reqEmail
-  levelupDB.put(email, req.body, function(err) {
+  levelupDB.put(email, req.body, (err) => {
     if (err) {
       console.error(err)
       res.send(304)
@@ -167,8 +167,8 @@ var object = {
   bestTime: "m",
   sleepTime: ["0000", "0800"]
 }
-levelupDB.put("jormond@andrew.cmu.edu", object, function(err) {
+levelupDB.put("jormond@andrew.cmu.edu", object, (err) => {
   if (err) {
-    conole.error(err)
+    console.error(err)
   }
 })
