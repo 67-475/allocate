@@ -1,4 +1,3 @@
-var words = require('random-words')
 var request = require('request')
 var scrambler = require('./scrambler')
 var google = require('googleapis')
@@ -8,6 +7,10 @@ var OAuth2 = google.auth.OAuth2
 var credentials = require('../config/config.js')
 var oauth2Clients = {}
 
+/**
+ * Create a new OAuth2 Client with the correct credentials
+ * @return {OAuth2} new instance of OAuth2 to be used to authenticate user
+ */
 function generate_auth() {
   return new OAuth2(
     credentials.client_id,
@@ -29,39 +32,60 @@ var login_link = server_auth.generateAuthUrl({
   redirect_uri: credentials.redirect_uri
 })
 
+/**
+ * Middleware to check whether or not user is logged
+ * and correctly authorized
+ * @param {Object} req Express.js request
+ * @param {Object} res Express.js response
+ * @param  {Function} next next piece of request handling
+ */
 function is_logged_in (req, res, next) {
-    if(req.cookies.auth && scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
-      next()
-    } else {
-      res.redirect('/login')
-    }
+  if (req.cookies.auth && scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
+    next()
+  } else {
+    res.redirect('/login')
+  }
 }
 
+/**
+ * Render login page with correct link
+ * @param {Object} req Express.js request
+ * @param {Object} res Express.js response
+ */
 function login (req, res) {
   res.render('login', {
     auth_url: login_link
   })
 }
 
+/**
+ * Callback URL for Google OAuth logout
+ * https://developers.google.com/google-apps/tasks/oauth-authorization-callback-handler
+ * @param {Object} req Express.js request
+ * @param {Object} res Express.js response
+ */
 function logout (req, res) {
-    cookie = scrambler.decrypt(req.cookies.auth)
-    var leaving = oauth2Clients[cookie]
-    delete oauth2Clients[cookie]
-    res.clearCookie('auth')
+  const cookie = scrambler.decrypt(req.cookies.auth)
+  var leaving = oauth2Clients[cookie]
+  delete oauth2Clients[cookie]
+  res.clearCookie('auth')
 
-    leaving.revokeCredentials((err, body, response) => {
-      res.redirect('/login')
-    })
+  leaving.revokeCredentials(() => { res.redirect('/login') })
 }
 
+/**
+ * Callback URL for Google OAuth login
+ * https://developers.google.com/google-apps/tasks/oauth-authorization-callback-handler
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
+ */
 function authorize (req, res) {
-  server_auth.getToken(req.query.code, (err, token) => {
-    if(!err) {
-
+  server_auth.getToken(req.query.code, (googleErr, token) => {
+    if (!googleErr) {
       const options = {
-        url: 'https://people.googleapis.com/v1/people/me\?fields\=emailAddresses\&key\=' + credentials.api_key,
+        url: 'https://people.googleapis.com/v1/people/me?fields=emailAddresses&key=' + credentials.api_key,
         headers: {
-          'Authorization' : token.token_type + ' ' + token.access_token
+          Authorization: token.token_type + ' ' + token.access_token
         },
         method: 'GET'
       }
@@ -72,19 +96,22 @@ function authorize (req, res) {
         oauth2Clients[email].setCredentials(token)
         res.redirect('/')
       })
-
     }
-
   })
 }
 
-var home = require('../app/home.js')
 
+var home = require('../app/home.js')
+/**
+ * Get events from Google Calendar
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
 function getHomeEvent(req, res) {
-  email = scrambler.decrypt(req.cookies.auth)
+  const email = scrambler.decrypt(req.cookies.auth)
   var client = oauth2Clients[email]
 
-  var events = home(client, (events) => {
+  home(client, (events) => {
     res.render('home', {
       events: events,
       email: email
@@ -93,7 +120,6 @@ function getHomeEvent(req, res) {
 }
 
 exports.init = (app) => {
-
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)

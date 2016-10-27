@@ -1,3 +1,5 @@
+/* eslint new-cap: 0, no-console:0 */
+
 var express = require('express')
 var app = express()
 
@@ -10,7 +12,7 @@ app.use(require('morgan')('dev'))
 app.set('view engine', 'ejs') // set up ejs for templating
 
 // routes
-var auth = require('./auth/routes.js').init(app)
+require('./auth/routes.js').init(app)
 
 app.use((req, res) => { res.redirect('/') })
 
@@ -20,5 +22,10 @@ var http = require('http').Server(app)
 
 // Start Application
 http.listen(port, () => {
-    console.log("Server started on port " + port)
+  console.log("Server started on port " + port)
 })
+
+// export some data for test
+module.exports = {
+  port: port
+}
