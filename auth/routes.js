@@ -5,6 +5,9 @@ var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
 var jsonfile = require('jsonfile')
 
+var levelup = require('levelup')
+var levelupDB = levelup('./db')
+
 // preprocess client and login link
 var credentials = require('../config/config.js')
 var oauth2Clients = {}
@@ -95,12 +98,20 @@ function getHomeEvent(req, res) {
 
 function getSettings(req, res) {
   email = scrambler.decrypt(req.cookies.auth)
-  var file = 'db/settings.json'
-  jsonfile.readFile(file, function(err, obj) {
-    if (obj[email] != null) {
-      res.send(obj[email])
-    } else {
+  // var file = 'db/settings.json'
+  // jsonfile.readFile(file, function(err, obj) {
+  //   if (obj[email] != null) {
+  //     res.send(obj[email])
+  //   } else {
+  //     res.send("Not found - " + email)
+  //   }
+  // })
+  
+  db.get(email, function(err, results) {
+    if (err) {
       res.send("Not found - " + email)
+    } else {
+      res.send(results)
     }
   })
 }
