@@ -123,15 +123,6 @@ function getHomeEvent(req, res) {
 
 function getSettings(req, res) {
   email = scrambler.decrypt(req.cookies.auth)
-  // var file = 'db/settings.json'
-  // jsonfile.readFile(file, function(err, obj) {
-  //   if (obj[email] != null) {
-  //     res.send(obj[email])
-  //   } else {
-  //     res.send("Not found - " + email)
-  //   }
-  // })
-  
   levelupDB.get(email, function(err, results) {
     if (err) {
       console.error(err)
@@ -148,26 +139,17 @@ function postSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
 
   if (reqEmail != email) {
-    res.send("WRONG")
+    res.send(304)
     return
   }
 
   email = reqEmail
-  var file = 'db/settings.json'
-  jsonfile.readFile(file, function(err, obj) {
-    if (obj[email] != null) {
-      obj[email] = req.body
-      // VERY BAD!! Need to add validations to assert the info posted
-      // is correct and appropriate
-      jsonfile.writeFile(file, obj, function(err) {
-        if (err) {
-          res.send("Error posting settings - " + email)
-        } else {
-          res.send("Settings updated - " + email)
-        }
-      })
+  levelupDB.put(email, req.body, function(err) {
+    if (err) {
+      conole.error(err)
+      res.send(304)
     } else {
-      res.send("Not found - " + email)
+      res.send(200)
     }
   })
 }
