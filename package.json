@@ -4,8 +4,9 @@
   "description": "allocate time in your Google Calendar to prevent procastination",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
-    "start": "node server.js"
+    "test": "npm run lint && mocha",
+    "start": "node server.js",
+    "lint": "./node_modules/.bin/eslint app/*.js auth/*.js config/*.js server.js"
   },
   "keywords": [
     "Google",
@@ -18,6 +19,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.2",
+    "eslint-plugin-import": "^1.16.0",
     "express": "^4.14.0",
     "google-auth-library": "^0.9.8",
     "googleapis": "^14.0.0",
@@ -30,6 +32,12 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1",
+    "jsdoc": "^3.4.2",
     "mocha": "^3.1.2"
   }
 }
