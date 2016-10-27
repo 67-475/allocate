@@ -2,7 +2,6 @@ var request = require('request')
 var scrambler = require('./scrambler')
 var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
-var jsonfile = require('jsonfile')
 
 var levelup = require('levelup')
 var levelupDB = levelup('./db', { valueEncoding: 'json' })
@@ -122,7 +121,7 @@ function getHomeEvent(req, res) {
 }
 
 function getSettings(req, res) {
-  email = scrambler.decrypt(req.cookies.auth)
+  var email = scrambler.decrypt(req.cookies.auth)
   levelupDB.get(email, function(err, results) {
     if (err) {
       console.error(err)
@@ -146,7 +145,7 @@ function postSettings(req, res) {
   email = reqEmail
   levelupDB.put(email, req.body, function(err) {
     if (err) {
-      conole.error(err)
+      console.error(err)
       res.send(304)
     } else {
       res.send(200)
