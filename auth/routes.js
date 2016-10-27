@@ -5,7 +5,7 @@ var OAuth2 = google.auth.OAuth2
 var jsonfile = require('jsonfile')
 
 var levelup = require('levelup')
-var levelupDB = levelup('./db')
+var levelupDB = levelup('./db', { valueEncoding: 'json' })
 
 // preprocess client and login link
 var credentials = require('../config/config.js')
@@ -132,11 +132,13 @@ function getSettings(req, res) {
   //   }
   // })
   
-  db.get(email, function(err, results) {
+  levelupDB.get(email, function(err, results) {
     if (err) {
-      res.send("Not found - " + email)
+      console.error(err)
+      res.render('settings')
     } else {
-      res.send(results)
+      console.log(results, results.bestTime, results.sleepTime)
+      res.render('settings', {settings: results})
     }
   })
 }
@@ -178,3 +180,14 @@ exports.init = (app) => {
   app.get('/settings', is_logged_in, getSettings)
   app.post('/settings/:email', is_logged_in, postSettings)
 }
+
+// for levelup testing purposes
+var object = {
+  bestTime: "m",
+  sleepTime: ["0000", "0800"]
+}
+levelupDB.put("jormond@andrew.cmu.edu", object, function(err) {
+  if (err) {
+    conole.error(err)
+  }
+})
