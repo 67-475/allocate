@@ -3,6 +3,9 @@ var scrambler = require('./scrambler')
 var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
 
+var levelup = require('levelup')
+var levelupDB = levelup('./db', { valueEncoding: 'json' })
+
 // preprocess client and login link
 var credentials = require('../config/config.js')
 var oauth2Clients = {}
@@ -117,9 +120,65 @@ function getHomeEvent(req, res) {
   })
 }
 
+/**
+ * Get the settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
+function getSettings(req, res) {
+  var email = scrambler.decrypt(req.cookies.auth)
+  levelupDB.get(email, (err, results) => {
+    if (err) {
+      console.error(err)
+      res.render('settings')
+    } else {
+      console.log(results, results.bestTime, results.sleepTime)
+      res.render('settings', { settings: results })
+    }
+  })
+}
+
+/**
+ * Post the settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
+function postSettings(req, res) {
+  var reqEmail = req.params.email
+  var email = scrambler.decrypt(req.cookies.auth)
+
+  if (reqEmail !== email) {
+    res.send(304)
+    return
+  }
+
+  email = reqEmail
+  levelupDB.put(email, req.body, (err) => {
+    if (err) {
+      console.error(err)
+      res.send(304)
+    } else {
+      res.send(200)
+    }
+  })
+}
+
 exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
   app.get('/', is_logged_in, getHomeEvent)
+  app.get('/settings', is_logged_in, getSettings)
+  app.post('/settings/:email', is_logged_in, postSettings)
 }
+
+// for levelup testing purposes
+var object = {
+  bestTime: "m",
+  sleepTime: ["0000", "0800"]
+}
+levelupDB.put("jormond@andrew.cmu.edu", object, (err) => {
+  if (err) {
+    console.error(err)
+  }
+})
