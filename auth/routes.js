@@ -120,6 +120,11 @@ function getHomeEvent(req, res) {
   })
 }
 
+/**
+ * Get the settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
 function getSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
   levelupDB.get(email, (err, results) => {
@@ -133,6 +138,11 @@ function getSettings(req, res) {
   })
 }
 
+/**
+ * Post the settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
 function postSettings(req, res) {
   var reqEmail = req.params.email
   var email = scrambler.decrypt(req.cookies.auth)
