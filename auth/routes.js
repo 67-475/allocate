@@ -143,15 +143,8 @@ function getSettings(req, res) {
  * @param  {Object} res express.js response
  */
 function postSettings(req, res) {
-  var reqEmail = req.params.email
   var email = scrambler.decrypt(req.cookies.auth)
 
-  if (reqEmail !== email) {
-    res.send(304)
-    return
-  }
-
-  email = reqEmail
   db.put(email, req.body, (err) => {
     if (err) {
       console.error(err)
@@ -168,7 +161,7 @@ exports.init = (app) => {
   app.get('/auth', authorize)
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettings)
-  app.post('/settings/:email', is_logged_in, postSettings)
+  app.post('/settings/', is_logged_in, postSettings)
 }
 
 // for levelup testing purposes
