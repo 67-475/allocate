@@ -7,10 +7,11 @@ function get(email, callback) {
 }
 
 function put(email, userSettings, callback) {
-  if(settings.check(userSettings)) {
+  const errors = settings.check(userSettings)
+  if(errors.length == 0) {
     levelupDB.put(email, userSettings, (err) => { callback(err) })
   } else {
-    callback(403)
+    callback(errors)
   }
 }
 

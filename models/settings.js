@@ -21,18 +21,19 @@ buster.addSchema(schema, '/settings')
 
 
 /**
- * Validate given object against above schema
- * @param  {Object} obj a settings object in the following form:
+ * Validate given object against above schema, which
+ * in practice would take the following form:
  var example = {
-   bestTime: "m",
-   sleepTime: [0, 800]
- }
- * @return {Boolean} result Whether or not given object is valid
+ bestTime: "m",
+ sleepTime: [0, 800]
+}
+ * @param  {Object} obj a settings object
+ * @return {Boolean} results Errors generated in validating the object
  */
 function check(obj) {
   const result = buster.validate(obj, schema)
   result.errors.forEach((error) => { console.log(error) })
-  return result.errors.length === 0
+  return result.errors
 }
 
 module.exports = check

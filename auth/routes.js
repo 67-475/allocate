@@ -148,7 +148,7 @@ function postSettings(req, res) {
   db.put(email, req.body, (err) => {
     if (err) {
       console.error(err)
-      res.send(err)
+      res.send(403).send{ errors: err }
     } else {
       res.send(200)
     }
