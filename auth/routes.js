@@ -1,13 +1,12 @@
 var request = require('request')
-var scrambler = require('./scrambler')
 var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
 
-var levelup = require('levelup')
-var levelupDB = levelup('./db', { valueEncoding: 'json' })
+var scrambler = require('./scrambler')
+var db = require('../models/db')
 
 // preprocess client and login link
-var credentials = require('../config/config.js')
+var credentials = require('../config/config')
 var oauth2Clients = {}
 
 /**
@@ -127,7 +126,7 @@ function getHomeEvent(req, res) {
  */
 function getSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
-  levelupDB.get(email, (err, results) => {
+  db.get(email, (err, results) => {
     if (err) {
       console.error(err)
       res.render('settings')
@@ -153,7 +152,7 @@ function postSettings(req, res) {
   }
 
   email = reqEmail
-  levelupDB.put(email, req.body, (err) => {
+  db.put(email, req.body, (err) => {
     if (err) {
       console.error(err)
       res.send(304)
@@ -177,7 +176,7 @@ var object = {
   bestTime: "m",
   sleepTime: ["0000", "0800"]
 }
-levelupDB.put("jormond@andrew.cmu.edu", object, (err) => {
+db.put("jormond@andrew.cmu.edu", object, (err) => {
   if (err) {
     console.error(err)
   }
