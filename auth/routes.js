@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 var request = require('request')
 var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
@@ -148,7 +149,7 @@ function postSettings(req, res) {
   db.put(email, req.body, (err) => {
     if (err) {
       console.error(err)
-      res.send(403).send{ errors: err }
+      res.send(403).send({ errors: err })
     } else {
       res.send(200)
     }
@@ -163,14 +164,3 @@ exports.init = (app) => {
   app.get('/settings', is_logged_in, getSettings)
   app.post('/settings', is_logged_in, postSettings)
 }
-
-// for levelup testing purposes
-var object = {
-  bestTime: "m",
-  sleepTime: ["0000", "0800"]
-}
-db.put("jormond@andrew.cmu.edu", object, (err) => {
-  if (err) {
-    console.error(err)
-  }
-})
