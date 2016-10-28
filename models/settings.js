@@ -30,10 +30,8 @@ buster.addSchema(schema, '/settings')
  * @param  {Object} obj a settings object
  * @return {Boolean} results Errors generated in validating the object
  */
-function check(obj) {
+ exports.check = (obj) => {
   const result = buster.validate(obj, schema)
   result.errors.forEach((error) => { console.log(error) })
   return result.errors
 }
-
-module.exports = check
