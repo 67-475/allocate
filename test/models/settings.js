@@ -21,6 +21,7 @@ describe('models/settings.js', () => {
     assert.equal(settings.check(morningPerson).length, 0)
     assert.equal(settings.check(nightOwl).length, 0)
   })
+
   it('should only allow the correct bestTime attributes', () => {
     nightOwl.bestTime = 'time to get a watch'
     assert.equal(settings.check(nightOwl).length, 1)
@@ -34,6 +35,20 @@ describe('models/settings.js', () => {
     nightOwl.bestTime = 'n'
     assert.equal(settings.check(nightOwl).length, 0)
   })
-  it('should only allow the correct time of day')
+
+  it('should only allow the correct time of day', () => {
+    morningPerson.sleepTime = [-10, 1200]
+    assert.equal(settings.check(morningPerson).length, 1)
+
+    morningPerson.sleepTime = [0, 2401]
+    assert.equal(settings.check(morningPerson).length, 1)
+
+    morningPerson.sleepTime = [-10, 1200]
+    assert.equal(settings.check(morningPerson).length, 1)
+
+    morningPerson.sleepTime = [-10, 9732]
+    assert.equal(settings.check(morningPerson).length, 2)
+  })
+
   it('should not allow incorrect ordering of time of day')
 })
