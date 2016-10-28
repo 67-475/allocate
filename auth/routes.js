@@ -148,7 +148,7 @@ function postSettings(req, res) {
   db.put(email, req.body, (err) => {
     if (err) {
       console.error(err)
-      res.send(304)
+      res.send(err)
     } else {
       res.send(200)
     }
@@ -161,7 +161,7 @@ exports.init = (app) => {
   app.get('/auth', authorize)
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettings)
-  app.post('/settings/', is_logged_in, postSettings)
+  app.post('/settings', is_logged_in, postSettings)
 }
 
 // for levelup testing purposes
