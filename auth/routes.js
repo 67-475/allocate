@@ -4,7 +4,7 @@ var google = require('googleapis')
 var OAuth2 = google.auth.OAuth2
 
 var scrambler = require('./scrambler')
-var db = require('../models/db')
+var db = require('../models/database')
 
 // preprocess client and login link
 var credentials = require('../config/config')

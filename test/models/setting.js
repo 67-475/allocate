@@ -1,4 +1,4 @@
-const settings = require('../../models/settings')
+const settings = require('../../models/setting')
 var assert = require('chai').assert;
 
 var morningPerson = {}
