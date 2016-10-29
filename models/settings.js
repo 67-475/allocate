@@ -48,20 +48,11 @@ Validator.prototype.customFormats.sequentialTime = (input) => {
 var buster = new Validator()
 buster.addSchema(schema, '/settings')
 
-/* an example settings object would take the following form
-  {
-    bestTime: "m",
-    sleepTime: [0, 800]
-  }
-*/
-
-
 /**
  * Validate given object against above schema, which requires this basic form:
- *
  * bestTime: either m or a or n (morning, afternoon, or night)
- *
  * sleepTime: an array of 2 numbers in military time
+ *
  * @param  {Object} obj a settings object
  * @return {Boolean} results Errors generated in validating the object
  */
