@@ -8,12 +8,12 @@ describe('models/settings.js', () => {
   before(() => {
     morningPerson = {
       bestTime: 'm',
-      sleepTime: [2200, 600]
+      sleepTimes: [2200, 600]
     }
 
     nightOwl = {
       bestTime: 'n',
-      sleepTime: [200, 1000]
+      sleepTimes: [200, 1000]
     }
   })
 
@@ -37,16 +37,13 @@ describe('models/settings.js', () => {
   })
 
   it('should only allow the correct time of day', () => {
-    morningPerson.sleepTime = [-10, 1200]
+    morningPerson.sleepTimes = [-10, 1200]
     assert.equal(settings.check(morningPerson).length, 1)
 
-    morningPerson.sleepTime = [0, 2401]
+    morningPerson.sleepTimes = [-10, 1200]
     assert.equal(settings.check(morningPerson).length, 1)
 
-    morningPerson.sleepTime = [-10, 1200]
-    assert.equal(settings.check(morningPerson).length, 1)
-
-    morningPerson.sleepTime = [-10, 9732]
+    morningPerson.sleepTimes = [-10, 9732]
     assert.equal(settings.check(morningPerson).length, 2)
   })
 

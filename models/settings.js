@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
-var Validator = require('jsonschema').Validator;
-var buster = new Validator()
+var jsonschema = require('jsonschema')
+var Validator = jsonschema.Validator
 
 var schema = {
   id: '/settings',
@@ -10,8 +10,9 @@ var schema = {
       type: 'string',
       pattern: '^[man]{1}$',
     },
-    sleepTime: {
+    sleepTimes: {
       type: 'array',
+      format: 'sequentialTime',
       items: {
         type: 'number',
         minimum: 0,
@@ -20,6 +21,31 @@ var schema = {
     }
   }
 }
+
+/**
+ * Here we assume that people do not go to sleep before 8pm or after 8am
+ * which is a relatively arbitrary measure, but (at least to me) seems pretty
+ * reasonable
+ * @param  {Array} input array of sleep Times
+ * @return {Boolean} result result of validation
+ */
+Validator.prototype.customFormats.sequentialTime = (input) => {
+  if(input.length !== 2) {
+    return input + ' should be an array of length 2'
+  }
+
+  var input_t = [input[0], input[1]]
+  input_t[1] += input[1] < 800 ? 2400 : 0
+
+
+  if(input_t[0] >= input_t[1]) {
+    return input + ' should be sequential military times'
+  }
+
+  return true
+}
+
+var buster = new Validator()
 buster.addSchema(schema, '/settings')
 
 /* an example settings object would take the following form
@@ -27,7 +53,7 @@ buster.addSchema(schema, '/settings')
     bestTime: "m",
     sleepTime: [0, 800]
   }
- */
+*/
 
 
 /**
