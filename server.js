@@ -3,13 +3,14 @@
 var express = require('express')
 var app = express()
 
-// cookies
+// cookies and body parsing
 var cookieParser = require('cookie-parser')
 app.use(cookieParser())
-
-// body parsing
 var bodyParser = require('body-parser')
 app.use(bodyParser())
+
+// server static files
+app.use(express.static(__dirname + '/public'));
 
 // set up logs and view engine
 app.use(require('morgan')('dev'))
