@@ -22,32 +22,44 @@
             $("#workTimePreference").val(bestTime)
 
             // format sleep time form
-            if (sleepTime.substr(0, 2) <= "11") {
-                $("#sleepTimeSuffix").val("am")
-            } else {
-                $("#sleepTimeSuffix").val("pm")
-                sleepTime = "0" + (parseInt(sleepTime.substr(0, 2)) - 12).toString() + sleepTime.substr(2)
-            }
-            if (sleepTime.substr(0, 2) === "00") {
-                sleepTime = "12" + sleepTime.substr(2)
-            }
-            var formattedSleepTime = sleepTime.substr(0, 2) + ":" + sleepTime.substr(2)
+            var formattedSleepTime = sleepTime.substr(0, 2) + ":" + sleepTime.substr(2) + ":00"
             $("#sleepTime").val(formattedSleepTime)
 
             // format wake time form
-            if (wakeTime.substr(0, 2) <= "11") {
-                $("#wakeTimeSuffix").val("am")
-            } else {
-                $("#wakeTimeSuffix").val("pm")
-                wakeTime = "0" + (parseInt(wakeTime.substr(0, 2)) - 12).toString() + wakeTime.substr(2)
-            }
-            if (wakeTime.substr(0, 2) === "00") {
-                wakeTime = "12" + wakeTime.substr(2)
-            }
-            var formattedWakeTime = wakeTime.substr(0, 2) + ":" + wakeTime.substr(2)
+            var formattedWakeTime = wakeTime.substr(0, 2) + ":" + wakeTime.substr(2) + ":00"
             $("#wakeTime").val(formattedWakeTime)
         }
     })
+
+    var submitForm = function() {
+        var bestTime = $("#workTimePreference").val()
+        var sleepTime = $("#sleepTime").val()
+        var wakeTime = $("#wakeTime").val()
+
+        // format sleep time
+        var formattedSleepTime = sleepTime.replace(":", "").substr(0, 4)
+        console.log(formattedSleepTime)
+
+        // format wake time
+        var formattedWakeTime = wakeTime.replace(":", "").substr(0, 4)
+        console.log(formattedWakeTime)
+
+        var data = {
+          bestTime: bestTime,
+          sleepTimes: [parseInt(sleepTime), parseInt(wakeTime)]
+        }
+
+        $.ajax({
+          url: "/settings",
+          data: data,
+          success: function() {
+            console.log("yay")
+          },
+          error: function(err) {
+            console.log(err)
+          }
+        })
+    }
     </script>
 
     <form class="form-inline">
@@ -64,23 +76,20 @@
     <form class="form-inline">
       <div class="form-group">
         <label for="sleepTime">What time do you go to sleep?</label>
-        <input type="email" class="form-control" id="sleepTime" aria-describedby="emailHelp" placeholder="Enter email">
-        <select class="form-control" id="sleepTimeSuffix">
-          <option value="am">AM</option>
-          <option value="pm">PM</option>
-        </select>       
+        <div class="col-xs-10">
+          <input class="form-control" type="time" value="13:45:00" id="sleepTime">
+        </div>
       </div>
     </form>
     <form class="form-inline">
       <div class="form-group">
         <label for="wakeTime">What time do you wake up?</label>
-        <input type="email" class="form-control" id="wakeTime" aria-describedby="emailHelp" placeholder="Enter email">
-        <select class="form-control" id="wakeTimeSuffix">
-          <option value="am">AM</option>
-          <option value="pm">PM</option>
-        </select> 
+        <div class="col-xs-10">
+          <input class="form-control" type="time" value="13:45:00" id="wakeTime">
+        </div>
       </div>
     </form>
+    <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
 </body>
 
 </html>
