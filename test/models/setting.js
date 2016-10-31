@@ -40,11 +40,8 @@ describe('models/settings.js', () => {
     morningPerson.sleepTimes = [-10, 1200]
     assert.equal(settings.check(morningPerson).length, 1)
 
-    morningPerson.sleepTimes = [-10, 1200]
-    assert.equal(settings.check(morningPerson).length, 1)
-
     morningPerson.sleepTimes = [-10, 9732]
-    assert.equal(settings.check(morningPerson).length, 2)
+    assert.equal(settings.check(morningPerson).length, 1)
   })
 
   it('should not allow incorrect ordering of time of day')

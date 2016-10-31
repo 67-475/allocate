@@ -26,13 +26,15 @@ Validator.prototype.customFormats.sequentialTime = (input) => {
   parsed = input.filter((i) => Number.isInteger(i))
 
   if(parsed.length !== 2) {
-    return parsed + ' should be an array of numbers of length 2'
+    // should be an array of numbers of length 2'
+    return false
   }
 
-  const inBounds = parsed.reduce((prev, time) => prev && (0 <= time <= 2400), 0)
+  const inBounds = (0 <= parsed[0] && parsed[0] <= 2400) && (0 <= parsed[1] && parsed[1] <= 2400)
 
   if(!inBounds) {
-    return parsed + ' should have times between 0 and 2400'
+    // should have times between 0 and 2400
+    return false
   }
 
   return true
