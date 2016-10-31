@@ -10,7 +10,8 @@ var bodyParser = require('body-parser')
 app.use(bodyParser())
 
 // server static files
-app.use(express.static(__dirname + '/public'));
+var path = require('path')
+app.use(express.static(path.join(__dirname, '/public')));
 
 // set up logs and view engine
 app.use(require('morgan')('dev'))
