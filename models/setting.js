@@ -13,33 +13,26 @@ var schema = {
     sleepTimes: {
       type: 'array',
       format: 'sequentialTime',
-      items: {
-        type: 'number',
-        minimum: 0,
-        maximum: 2400
-      }
     }
   }
 }
 
 /**
- * Here we assume that people do not go to sleep before 8pm or after 8am
- * which is a relatively arbitrary measure, but (at least to me) seems pretty
- * reasonable
  * @param  {Array} input array of sleep Times
  * @return {Boolean} result result of validation
  */
 Validator.prototype.customFormats.sequentialTime = (input) => {
-  if(input.length !== 2) {
-    return input + ' should be an array of length 2'
+  var parsed = input.map((i) => parseInt(i))
+  parsed = input.filter((i) => Number.isInteger(i))
+
+  if(parsed.length !== 2) {
+    return parsed + ' should be an array of numbers of length 2'
   }
 
-  var input_t = [input[0], input[1]]
-  input_t[1] += input[1] < 800 ? 2400 : 0
+  const inBounds = parsed.reduce((prev, time) => prev && (0 <= time <= 2400), 0)
 
-
-  if(input_t[0] >= input_t[1]) {
-    return input + ' should be sequential military times'
+  if(!inBounds) {
+    return parsed + ' should have times between 0 and 2400'
   }
 
   return true

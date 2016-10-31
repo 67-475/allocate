@@ -7,6 +7,10 @@ var app = express()
 var cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
+// body parsing
+var bodyParser = require('body-parser')
+app.use(bodyParser())
+
 // set up logs and view engine
 app.use(require('morgan')('dev'))
 app.set('view engine', 'ejs') // set up ejs for templating
