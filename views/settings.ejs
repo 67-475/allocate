@@ -8,10 +8,38 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
 </head>
 
-<body>
-    <%= "hello" %>
-    <%= settings.bestTime %>
-    <%= settings.sleepTime %>
+<body class="container">
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="workTimePreference">Work time preference</label>
+        <select class="form-control" id="workTimePreference">
+          <option value="m">Morning</option>
+          <option value="a">Afternoon</option>
+          <option value="e">Evening</option>
+          <option value="n">Night</option>
+        </select>
+      </div>
+    </form>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="sleepTime">What time do you go to sleep?</label>
+        <input type="email" class="form-control" id="sleepTime" aria-describedby="emailHelp" placeholder="Enter email">
+        <select class="form-control" id="sleepTimeSuffix">
+          <option value="am">AM</option>
+          <option value="pm">PM</option>
+        </select>       
+      </div>
+    </form>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="wakeTime">What time do you wake up?</label>
+        <input type="email" class="form-control" id="wakeTime" aria-describedby="emailHelp" placeholder="Enter email">
+        <select class="form-control" id="wakeTimeSuffix">
+          <option value="am">AM</option>
+          <option value="pm">PM</option>
+        </select> 
+      </div>
+    </form>
 </body>
 
 </html>
