@@ -23,7 +23,7 @@ var schema = {
  */
 Validator.prototype.customFormats.sequentialTime = (input) => {
   var parsed = input.map((i) => parseInt(i))
-  parsed = input.filter((i) => Number.isInteger(i))
+  parsed = parsed.filter((i) => Number.isInteger(i))
 
   if(parsed.length !== 2) {
     // should be an array of numbers of length 2'
