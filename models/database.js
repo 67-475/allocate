@@ -3,7 +3,7 @@ var levelupDB = levelup('./db', { valueEncoding: 'json' })
 const settings = require('./setting')
 
 function get(email, callback) {
-  levelupDB.get(email, (err, result) => { callback(err, results) })
+  levelupDB.get(email, (err, result) => { callback(err, result) })
 }
 
 function put(email, userSettings, callback) {
