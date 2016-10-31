@@ -3,9 +3,15 @@
 var express = require('express')
 var app = express()
 
-// cookies
+// cookies and body parsing
 var cookieParser = require('cookie-parser')
 app.use(cookieParser())
+var bodyParser = require('body-parser')
+app.use(bodyParser())
+
+// server static files
+var path = require('path')
+app.use(express.static(path.join(__dirname, '/public')));
 
 // set up logs and view engine
 app.use(require('morgan')('dev'))

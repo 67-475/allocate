@@ -1,17 +1,47 @@
 <html>
 
-<head>
+  <head>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
-</head>
+    <script>
+      var settings = <%- JSON.stringify(settings) %>
+    </script>
+    <script src="/settings.js"></script>
+  </head>
 
-<body>
-    <%= "hello" %>
-    <%= settings.bestTime %>
-    <%= settings.sleepTime %>
-</body>
+  <body class="container">
+
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="workTimePreference">Work time preference</label>
+        <select class="form-control" id="workTimePreference">
+          <option value="m">Morning</option>
+          <option value="a">Afternoon</option>
+          <option value="e">Evening</option>
+          <option value="n">Night</option>
+        </select>
+      </div>
+    </form>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="sleepTime">What time do you go to sleep?</label>
+        <div class="col-xs-10">
+          <input class="form-control" type="time" value="13:45:00" id="sleepTime">
+        </div>
+      </div>
+    </form>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="wakeTime">What time do you wake up?</label>
+        <div class="col-xs-10">
+          <input class="form-control" type="time" value="13:45:00" id="wakeTime">
+        </div>
+      </div>
+    </form>
+    <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+  </body>
 
 </html>
