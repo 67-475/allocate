@@ -15,8 +15,8 @@
         console.log(settings)
         if (settings !== null) {
             var bestTime = settings.bestTime
-            var sleepTime = settings.sleepTime[0]
-            var wakeTime = settings.sleepTime[1]
+            var sleepTime = settings.sleepTimes[0]
+            var wakeTime = settings.sleepTimes[1]
 
             // format best time form
             $("#workTimePreference").val(bestTime)
@@ -46,14 +46,15 @@
 
         var data = {
           bestTime: bestTime,
-          sleepTimes: [parseInt(sleepTime), parseInt(wakeTime)]
+          sleepTimes: [parseInt(formattedSleepTime), parseInt(formattedWakeTime)]
         }
 
         $.ajax({
           url: "/settings",
+          method: 'POST',
           data: data,
-          success: function() {
-            console.log("yay")
+          success: function(data) {
+            console.log(data)
           },
           error: function(err) {
             console.log(err)
