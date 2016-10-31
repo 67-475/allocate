@@ -13,11 +13,6 @@ var schema = {
     sleepTimes: {
       type: 'array',
       format: 'sequentialTime',
-      items: {
-        type: 'number',
-        minimum: 0,
-        maximum: 2400
-      }
     }
   }
 }
@@ -30,16 +25,25 @@ var schema = {
  * @return {Boolean} result result of validation
  */
 Validator.prototype.customFormats.sequentialTime = (input) => {
-  if(input.length !== 2) {
-    return input + ' should be an array of length 2'
+  var parsed = input.map((i) => parseInt(i))
+  parsed = input.filter((i) => Number.isInteger(i))
+
+  if(parsed.length !== 2) {
+    return parsed + ' should be an array of numbers of length 2'
   }
 
-  var input_t = [input[0], input[1]]
-  input_t[1] += input[1] < 800 ? 2400 : 0
+  const inBounds = parsed.reduce((prev, time) => prev && (0 <= time <= 2400), 0)
+
+  if(!inBounds) {
+    return parsed + ' should have times between 0 and 2400'
+  }
+
+  var input_t = [parsed[0], parsed[1]]
+  input_t[1] += parsed[1] < 800 ? 2400 : 0
 
 
   if(input_t[0] >= input_t[1]) {
-    return input + ' should be sequential military times'
+    return parsed + ' should be sequential military times'
   }
 
   return true
