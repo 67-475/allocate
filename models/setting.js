@@ -8,7 +8,7 @@ var schema = {
   properties: {
     bestTime: {
       type: 'string',
-      pattern: '^[man]{1}$',
+      pattern: '^[maen]{1}$',
     },
     sleepTimes: {
       type: 'array',
