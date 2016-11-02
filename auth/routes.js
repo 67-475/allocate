@@ -62,14 +62,28 @@ function authorize (req, res) {
   })
 }
 
-var home = require('../app/home.js')
+var calendarLogic = require('../app/calendarLogic.js')
 
-function getHomeEvent(req, res) {
+function home(req, res) {
   var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
 
-  var events = home(client, (events) => {
+  // var calendars = calendarLogic.getCalendars(client, (calendars) => {
+  //   calendarLogic.getEvents(client, (events) =>)
+  // })
+
+  var events = calendarLogic.getEvents(client, (events) => {
     res.render('home', {
       events: events
+    })
+  })
+}
+
+function calendars(req, res) {
+  var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
+
+  var calendars = calendarLogic.getCalendars(client, (calendars) => {
+    res.render('calendars', {
+      calendars: calendars
     })
   })
 }
@@ -79,5 +93,6 @@ exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
-  app.get('/', is_logged_in, getHomeEvent)
+  app.get('/', is_logged_in, home)
+  app.get('/calendars', calendars)
 }
