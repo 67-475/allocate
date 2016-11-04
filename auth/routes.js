@@ -121,11 +121,11 @@ function getHomeEvent(req, res) {
 }
 
 /**
- * Get the settings for a user
+ * Get the settings page for a user
  * @param  {Object} req express.js request
  * @param  {Object} res express.js response
  */
-function getSettings(req, res) {
+function getSettingsPage(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
   db.get(email, (err, results) => {
     if (err) {
@@ -134,6 +134,19 @@ function getSettings(req, res) {
     } else {
       console.log(results, results.bestTime, results.sleepTime)
       res.render('settings', { settings: results })
+    }
+  })
+}
+
+function getSettings(req, res) {
+  var email = scrambler.decrypt(req.cookies.auth)
+  db.get(email, (err, results) => {
+    if (err) {
+      console.error(err)
+      res.status(304)
+    } else {
+      console.log(results, results.bestTime, results.sleepTime)
+      res.send(results)
     }
   })
 }
@@ -161,6 +174,7 @@ exports.init = (app) => {
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
   app.get('/', is_logged_in, getHomeEvent)
-  app.get('/settings', is_logged_in, getSettings)
+  app.get('/settings', is_logged_in, getSettingsPage)
+  app.get('/settings/:email', is_logged_in, getSettings)
   app.post('/settings', is_logged_in, postSettings)
 }

@@ -1,8 +1,8 @@
 $(function() {
   if (typeof settings !== 'undefined') {
       var bestTime = settings.bestTime
-      var sleepTime = settings.sleepTimes[0]
-      var wakeTime = settings.sleepTimes[1]
+      var sleepTime = settings.sleepTime[0]
+      var wakeTime = settings.sleepTime[1]
 
       while(sleepTime.length < 4) {
         sleepTime = '0' + sleepTime
@@ -15,11 +15,11 @@ $(function() {
       $("#workTimePreference").val(bestTime)
 
       // format sleep time form
-      var formattedSleepTime = sleepTime.substr(0, 2) + ":" + sleepTime.substr(2) + ":00"
+      var formattedSleepTime = sleepTime.substr(0, 2) + ":" + sleepTime.substr(2)
       $("#sleepTime").val(formattedSleepTime)
 
       // format wake time form
-      var formattedWakeTime = wakeTime.substr(0, 2) + ":" + wakeTime.substr(2) + ":00"
+      var formattedWakeTime = wakeTime.substr(0, 2) + ":" + wakeTime.substr(2)
       $("#wakeTime").val(formattedWakeTime)
   } else {
     console.log('undefined settings')
