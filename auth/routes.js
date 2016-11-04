@@ -190,12 +190,12 @@ exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
-<<<<<<< HEAD
-  app.get('/', is_logged_in, home)
+// <<<<<<< HEAD
+  // app.get('/', is_logged_in, home)
   app.get('/calendars', calendars)
-=======
+// =======
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettings)
   app.post('/settings', is_logged_in, postSettings)
->>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927
+// >>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927
 }
