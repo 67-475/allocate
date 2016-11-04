@@ -26,7 +26,8 @@ var server_auth = generate_auth()
 
 var scopes = [
   'https://www.googleapis.com/auth/calendar',
-  'https://www.googleapis.com/auth/plus.login'
+  'https://www.googleapis.com/auth/plus.login',
+  'https://www.googleapis.com/auth/user.emails.read'
 ]
 var login_link = server_auth.generateAuthUrl({
   scope: scopes.join(' '),
@@ -84,18 +85,23 @@ function authorize (req, res) {
   server_auth.getToken(req.query.code, (googleErr, token) => {
     if (!googleErr) {
       const options = {
-        url: 'https://people.googleapis.com/v1/people/me?fields=emailAddresses&key=' + credentials.api_key,
+        url: 'https://content-people.googleapis.com/v1/people/me?fields=emailAddresses&key=' + credentials.api_key,
         headers: {
           Authorization: token.token_type + ' ' + token.access_token
         },
         method: 'GET'
       }
       request(options, (err, response, body) => {
-        const email = JSON.parse(body).emailAddresses[0].value
-        oauth2Clients[email] = generate_auth()
-        res.cookie('auth', scrambler.encrypt(email))
-        oauth2Clients[email].setCredentials(token)
-        res.redirect('/')
+        try {
+          const email = JSON.parse(body).emailAddresses[0].value
+          oauth2Clients[email] = generate_auth()
+          res.cookie('auth', scrambler.encrypt(email))
+          oauth2Clients[email].setCredentials(token)
+        } catch (error) {
+          console.log(JSON.parse(body))
+        } finally {
+          res.redirect('/')
+        }
       })
     }
   })
