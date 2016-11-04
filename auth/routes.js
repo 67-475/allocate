@@ -99,7 +99,7 @@ function authorize (req, res) {
         } catch (error) {
           console.log(JSON.parse(body))
         } finally {
-          res.redirect('/')          
+          res.redirect('/')
         }
       })
     }
