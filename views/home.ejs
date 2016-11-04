@@ -1,87 +1,87 @@
 <html>
+    <head>
+        <meta http-equiv="X-Frame-Options" content="allow">
 
-<head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var events = <%- JSON.stringify(events) %>
+        </script>
+        <script src="/home.js" type="text/javascript"></script>
+    </head>
 
-<script type="text/javascript">
+    <body>
 
-    function addEventToPage(ev) {
-        var tbody = $("#tbody")
-        // console.log(ev.summary)
+        <nav class="navbar navbar-light bg-faded">
+            <a class="navbar-brand" href="#"><%= email %></a>
+            <span class="navbar-text float-xs-right text-muted">
+                <a class="btn btn-primary" href='/settings' role="button">Settings</a>
+                <a class="btn btn-primary" href='/logout' role="button">Logout</a>
+            </span>
+        </nav>
 
-        var container = $('<tr></tr>')
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Summary</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Location</th>
+                    <th>Reminders?<th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
 
-        // summary
-        container.append("<td>" + ev.summary + "</td>")
+        <form class="row">
+            <div class="form-group col-sm-8 offset-sm-2">
+              <label for="eventTitle" class="col-xs-4 col-form-label">Event Title:</label>
+              <div class="col-xs-8">
+                <input class="form-control" type="text" placeholder="German homework..." id="eventTitle">
+              </div>
+            </div>
+            <div class="form-group col-sm-8 offset-sm-2">
+              <label for="estimatedHours" class="col-xs-4 col-form-label">Estimated Hours:</label>
+              <div class="col-xs-8">
+                <input class="form-control" type="text" placeholder="12" id="estimatedHours">
+              </div>
+            </div>
+            <div class="form-group col-sm-8 offset-sm-2">
+              <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
+              <div class="col-xs-8">
+                <input class="form-control" type="datetime-local" id="estimatedDate">
+              </div>
+            </div>
+            <div class="form-group col-sm-8 offset-sm-2">
+              <label for="workTimePreference" class="col-xs-4 col-form-label">Work Time Preference:</label>
+              <div class="col-xs-8">
+                <input class="form-control" type="text" placeholder="12" id="workTimePreference">
+              </div>
+            </div>
+            <div class="form-group col-sm-8 offset-sm-2">
+              <label for="sleepTime" class="col-xs-4 col-form-label">Sleep Time:</label>
+              <div class="col-xs-8">
+                <input class="form-control" type="text" placeholder="12" id="sleepTime">
+              </div>
+            </div>
+            <div class="form-group col-sm-8 offset-sm-2">
+              <label for="wakeTime" class="col-xs-4 col-form-label">Wake Time:</label>
+              <div class="col-xs-8">
+                <input class="form-control" type="text" placeholder="12" id="wakeTime">
+              </div>
+            </div>
+        </form>
 
-        // start/end
-        if (ev.start.date != null) {
-            container.append("<td>" + Date(ev.start.date) + "</td")
-            container.append("<td>" + Date(ev.end.date) + "</td")
-        } else if (ev.start.dateTime != null) {
-            container.append("<td>" + Date(ev.start.dateTime) + "</td")
-            container.append("<td>" + Date(ev.end.dateTime) + "</td")
-        } else {
-            container.append("<td>" + "Unknown" + "</td")
-            container.append("<td>" + "Unknown" + "</td")
-        }
+        <iframe src="https://calendar.google.com/calendar/embed?src=<%= email %>&ctz=America/New_York" style="border: 0; width: 100%; height: 600px" frameborder="0" scrolling="no"></iframe>
+        <script>
+          var events = <%- JSON.stringify(events) %>
+        </script>
 
-        // location
-        if (ev.location != null) {
-            container.append("<td>" + ev.location + "</td")
-        } else {
-            container.append("<td>" + "Unknown" + "</td")
-        }
-
-        // reminders
-        if (ev.reminders.overrides != null) {
-            container.append("<td>" + ev.reminders.overrides.length + "</td")
-        } else {
-            container.append("<td>" + "None" + "</td")
-        }
-
-        tbody.append(container)
-    }
-
-    $(function() {
-        var events = <%- JSON.stringify(events) %>
-        console.log(events)
-        for (var i = 0; i < events.length; i++) {
-            var ev = events[i]
-            addEventToPage(ev)
-        };
-    })
-
-</script>
-</head>
-
-<body>
-
-    <nav class="navbar navbar-light bg-faded">
-        <span class="navbar-text float-xs-right text-muted">
-            <a class="btn btn-primary" href='/logout' role="button">Logout</a>
-        </span>
-    </nav>
-
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Summary</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Location</th>
-                <th>Reminders?<th>
-            </tr>
-        </thead>
-        <tbody id="tbody">
-        </tbody>
-    </table>
-    <br />
-    <iframe src="https://calendar.google.com/calendar/embed?mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=alhenry%40andrew.cmu.edu&amp;color=%23182C57&amp;src=andrew.cmu.edu_bft2v1rj23q0kq2j79u72dbca8%40group.calendar.google.com&amp;color=%2323164E&amp;src=andrew.cmu.edu_aiq02e2mrblienn7q3hpong3cc%40group.calendar.google.com&amp;color=%23711616&amp;ctz=America%2FNew_York" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-</body>
+    </body>
 
 </html>
+>>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927

@@ -10,7 +10,7 @@ describe('auth/scrambler.js', () => {
     assert.isTrue(buster == scrambler.decrypt(secret))
   })
 
-  it('should not have the same encryption across instances', () => {
+  it('should have the same encryption across instances', () => {
     const scrambler2 = require('../auth/scrambler')
     const buster = words({ exactly: 5, join: '-' })
 

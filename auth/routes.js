@@ -1,12 +1,19 @@
+/* eslint no-console:0 */
+var request = require('request')
 var google = require('googleapis')
-var words = require('random-words')
-var scrambler = require('./scrambler')
 var OAuth2 = google.auth.OAuth2
 
+var scrambler = require('./scrambler')
+var db = require('../models/database')
+
 // preprocess client and login link
-var credentials = require('../config/config.js')
+var credentials = require('../config/config')
 var oauth2Clients = {}
 
+/**
+ * Create a new OAuth2 Client with the correct credentials
+ * @return {OAuth2} new instance of OAuth2 to be used to authenticate user
+ */
 function generate_auth() {
   return new OAuth2(
     credentials.client_id,
@@ -17,63 +24,117 @@ function generate_auth() {
 
 var server_auth = generate_auth()
 
-var scope = ['https://www.googleapis.com/auth/calendar']
+var scopes = [
+  'https://www.googleapis.com/auth/calendar',
+  'https://www.googleapis.com/auth/plus.login',
+  'https://www.googleapis.com/auth/user.emails.read'
+]
 var login_link = server_auth.generateAuthUrl({
-  scope: scope,
+  scope: scopes.join(' '),
   redirect_uri: credentials.redirect_uri
 })
 
+/**
+ * Middleware to check whether or not user is logged
+ * and correctly authorized
+ * @param {Object} req Express.js request
+ * @param {Object} res Express.js response
+ * @param  {Function} next next piece of request handling
+ */
 function is_logged_in (req, res, next) {
-    if(req.cookies.auth && scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
-      next()
-    } else {
-      res.redirect('/login')
-    }
+  if (req.cookies.auth && scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
+    next()
+  } else {
+    res.redirect('/login')
+  }
 }
 
+/**
+ * Render login page with correct link
+ * @param {Object} req Express.js request
+ * @param {Object} res Express.js response
+ */
 function login (req, res) {
   res.render('login', {
     auth_url: login_link
   })
 }
 
+/**
+ * Callback URL for Google OAuth logout
+ * https://developers.google.com/google-apps/tasks/oauth-authorization-callback-handler
+ * @param {Object} req Express.js request
+ * @param {Object} res Express.js response
+ */
 function logout (req, res) {
-    cookie = scrambler.decrypt(req.cookies.auth)
-    var leaving = oauth2Clients[cookie]
-    delete oauth2Clients[cookie]
-    res.clearCookie('auth')
+  const cookie = scrambler.decrypt(req.cookies.auth)
+  var leaving = oauth2Clients[cookie]
+  delete oauth2Clients[cookie]
+  res.clearCookie('auth')
 
-    leaving.revokeCredentials((err, body, response) => {
-      res.redirect('/login')
-    })
+  leaving.revokeCredentials(() => { res.redirect('/login') })
 }
 
+/**
+ * Callback URL for Google OAuth login
+ * https://developers.google.com/google-apps/tasks/oauth-authorization-callback-handler
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
+ */
 function authorize (req, res) {
-  server_auth.getToken(req.query.code, (err, token) => {
-
-    if(!err) {
-      const cookie = words({ exactly: 5, join: '-' })
-      oauth2Clients[cookie] = generate_auth()
-      res.cookie('auth', scrambler.encrypt(cookie))
-      oauth2Clients[cookie].setCredentials(token)
+  server_auth.getToken(req.query.code, (googleErr, token) => {
+    if (!googleErr) {
+      const options = {
+        url: 'https://content-people.googleapis.com/v1/people/me?fields=emailAddresses&key=' + credentials.api_key,
+        headers: {
+          Authorization: token.token_type + ' ' + token.access_token
+        },
+        method: 'GET'
+      }
+      request(options, (err, response, body) => {
+        try {
+          const email = JSON.parse(body).emailAddresses[0].value
+          oauth2Clients[email] = generate_auth()
+          res.cookie('auth', scrambler.encrypt(email))
+          oauth2Clients[email].setCredentials(token)
+        } catch (error) {
+          console.log(JSON.parse(body))
+        } finally {
+          res.redirect('/')
+        }
+      })
     }
-
-    res.redirect('/')
   })
 }
 
+// <<<<<<< HEAD
 var calendarLogic = require('../app/calendarLogic.js')
 
-function home(req, res) {
-  var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
+// function home(req, res) {
+//   var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
 
-  // var calendars = calendarLogic.getCalendars(client, (calendars) => {
-  //   calendarLogic.getEvents(client, (events) =>)
-  // })
+//   // var calendars = calendarLogic.getCalendars(client, (calendars) => {
+//   //   calendarLogic.getEvents(client, (events) =>)
+//   // })
 
-  var events = calendarLogic.getEvents(client, (events) => {
+//   var events = calendarLogic.getEvents(client, (events) => {
+// =======
+
+var home = require('../app/home.js')
+/**
+ * Get events from Google Calendar
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
+function getHomeEvent(req, res) {
+  const email = scrambler.decrypt(req.cookies.auth)
+  var client = oauth2Clients[email]
+
+  home(client, (events) => {
+// >>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927
     res.render('home', {
-      events: events
+      events: events,
+      email: email
     })
   })
 
@@ -89,11 +150,52 @@ function calendars(req, res) {
   })
 }
 
-exports.init = (app) => {
+/**
+ * Get the settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
+function getSettings(req, res) {
+  var email = scrambler.decrypt(req.cookies.auth)
+  db.get(email, (err, results) => {
+    if (err) {
+      console.error(err)
+      res.render('settings')
+    } else {
+      console.log(results, results.bestTime, results.sleepTime)
+      res.render('settings', { settings: results })
+    }
+  })
+}
 
+/**
+ * Post the settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
+function postSettings(req, res) {
+  var email = scrambler.decrypt(req.cookies.auth)
+
+  db.put(email, req.body, (err) => {
+    if (err) {
+      console.error(err)
+      res.status(403).send({ errors: err })
+    } else {
+      res.send(200)
+    }
+  })
+}
+
+exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
+<<<<<<< HEAD
   app.get('/', is_logged_in, home)
   app.get('/calendars', calendars)
+=======
+  app.get('/', is_logged_in, getHomeEvent)
+  app.get('/settings', is_logged_in, getSettings)
+  app.post('/settings', is_logged_in, postSettings)
+>>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927
 }

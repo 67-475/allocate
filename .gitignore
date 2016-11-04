@@ -1,3 +1,6 @@
 node_modules/
 config/auth.json
 *.log
+out/
+db/
+*.lock
