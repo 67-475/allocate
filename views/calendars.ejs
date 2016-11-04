@@ -26,19 +26,19 @@
     }
 
     $(function() {
-        var iFrameSourceString = "https://calendar.google.com/calendar/embed?mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;";
+        var iFrameSourceString = "https://calendar.google.com/calendar/embed?mode=WEEK&height=600&wkst=1&bgcolor=%23FFFFFF&";
 
         var calendars = <%- JSON.stringify(calendars) %>;
         for (var i = 0; i < calendars.length; i++) {
             var cal = calendars[i]
             addCalendarToPage(cal)
 
-            iFrameSourceString = iFrameSourceString + "src=" + cal.id + "&amp;color=" + cal.backgroundColor
+            iFrameSourceString = iFrameSourceString + "&src=" + encodeURIComponent(cal.id) + "&color=" + encodeURIComponent(cal.backgroundColor)
         };
 
-        iFrameSourceString += "&amp;ctz=America%2FNew_York";
+        iFrameSourceString += "&ctz=America%2FNew_York";
 
-        var $iFrame = $("<iFrame>", {"src": encodeURIComponent(iFrameSourceString), "style": "border-width:0", "width": "800", "height": "600", "frameborder": "0", "scrolling": "no"});
+        var $iFrame = $("<iFrame>", {"src": iFrameSourceString, "style": "border-width:0", "width": "800", "height": "600", "frameborder": "0", "scrolling": "no"});
 
         $("#calendarsBody").append($iFrame);
     })
@@ -68,9 +68,6 @@
         </tbody>
     </table>
     <br />
-
-    <!-- <iframe src="https://calendar.google.com/calendar/embed?mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=alhenry%40andrew.cmu.edu&amp;color=%23182C57&amp;src=andrew.cmu.edu_bft2v1rj23q0kq2j79u72dbca8%40group.calendar.google.com&amp;color=%2323164E&amp;src=andrew.cmu.edu_aiq02e2mrblienn7q3hpong3cc%40group.calendar.google.com&amp;color=%23711616&amp;ctz=America%2FNew_York" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
-
 </body>
 
 </html>

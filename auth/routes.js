@@ -76,6 +76,7 @@ function home(req, res) {
       events: events
     })
   })
+
 }
 
 function calendars(req, res) {
