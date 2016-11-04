@@ -37,7 +37,6 @@ function addEventToPage(ev) {
 }
 
 $(function() {
-    var events = <%- JSON.stringify(events) %>
     console.log(events)
     for (var i = 0; i < events.length; i++) {
         var ev = events[i]
