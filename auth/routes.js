@@ -91,11 +91,16 @@ function authorize (req, res) {
         method: 'GET'
       }
       request(options, (err, response, body) => {
-        const email = JSON.parse(body).emailAddresses[0].value
-        oauth2Clients[email] = generate_auth()
-        res.cookie('auth', scrambler.encrypt(email))
-        oauth2Clients[email].setCredentials(token)
-        res.redirect('/')
+        try {
+          const email = JSON.parse(body).emailAddresses[0].value
+          oauth2Clients[email] = generate_auth()
+          res.cookie('auth', scrambler.encrypt(email))
+          oauth2Clients[email].setCredentials(token)
+        } catch (error) {
+          console.log(JSON.parse(body))
+        } finally {
+          res.redirect('/')          
+        }
       })
     }
   })
