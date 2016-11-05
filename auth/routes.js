@@ -144,6 +144,11 @@ function getSettingsPage(req, res) {
   })
 }
 
+/**
+ * Getthe settings for a user
+ * @param  {Object} req express.js request
+ * @param  {Object} res express.js response
+ */
 function getSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
   db.get(email, (err, results) => {
