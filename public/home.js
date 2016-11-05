@@ -38,8 +38,8 @@ function addEventToPage(ev) {
 
 function inputUserDefaultSettings(settings) {
     var bestTime = settings.bestTime
-    var sleepTime = settings.sleepTime[0]
-    var wakeTime = settings.sleepTime[1]
+    var sleepTime = settings.sleepTimes[0]
+    var wakeTime = settings.sleepTimes[1]
 
     while(sleepTime.length < 4) {
         sleepTime = '0' + sleepTime
