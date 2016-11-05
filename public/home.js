@@ -20,6 +20,20 @@ function inputUserDefaultSettings(settings) {
     // format wake time form
     var formattedWakeTime = wakeTime.substr(0, 2) + ":" + wakeTime.substr(2) + ":00"
     $("#wakeTime").val(formattedWakeTime)
+
+    // format due date default to tomorrow
+    var tomorrow = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
+    var tomday = tomorrow.getDate();
+    var tommonth = tomorrow.getMonth() + 1;
+    var tomyear = tomorrow.getFullYear();
+    if (tomday < 10) {
+        tomday='0'+tomday
+    }
+    if (tommonth < 10) {
+        tommonth='0'+tommonth
+    }
+    tomorrow = tomyear + "-" + tommonth + "-" + tomday + "T12:00:00"
+    $("#dueDate").attr("value", tomorrow)
 }
 
 function fetchUserDefaultSettings() {
