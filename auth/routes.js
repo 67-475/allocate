@@ -107,20 +107,9 @@ function authorize (req, res) {
   })
 }
 
-// <<<<<<< HEAD
 var calendarLogic = require('../app/calendarLogic.js')
-
-// function home(req, res) {
-//   var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
-
-//   // var calendars = calendarLogic.getCalendars(client, (calendars) => {
-//   //   calendarLogic.getEvents(client, (events) =>)
-//   // })
-
-//   var events = calendarLogic.getEvents(client, (events) => {
-// =======
-
 var home = require('../app/home.js')
+
 /**
  * Get events from Google Calendar
  * @param  {Object} req express.js request
@@ -131,7 +120,6 @@ function getHomeEvent(req, res) {
   var client = oauth2Clients[email]
 
   home(client, (events) => {
-// >>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927
     res.render('home', {
       events: events,
       email: email
@@ -190,12 +178,8 @@ exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
-// <<<<<<< HEAD
-  // app.get('/', is_logged_in, home)
-  app.get('/calendars', calendars)
-// =======
+  app.get('/calendars',is_logged_in, calendars)
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettings)
   app.post('/settings', is_logged_in, postSettings)
-// >>>>>>> 61b60fe0717f3510456d0377bee4a6c20208f927
 }
