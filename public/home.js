@@ -68,6 +68,19 @@ function submitTaskForm() {
 
 }
 
+function showFormExtras() {
+    $("#formExtras").show()
+}
+
+function toggleFormExtras() {
+    var extras = $("#formExtras")
+    var eventTitle = $("#eventTitle").val()
+
+    if (eventTitle === "") {
+        extras.hide()
+    }
+}
+
 $(function() {
     fetchUserDefaultSettings()
 })
