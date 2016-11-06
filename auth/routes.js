@@ -108,7 +108,7 @@ function authorize (req, res) {
 }
 
 
-var events = require('../app/events.js')
+var event = require('../app/events.js')
 /**
  * Get events from Google Calendar
  * @param  {Object} req express.js request
@@ -118,7 +118,7 @@ function getHomeEvent(req, res) {
   const email = scrambler.decrypt(req.cookies.auth)
   var client = oauth2Clients[email]
 
-  events.home(client, (events) => {
+  event.home(client, (events) => {
     res.render('home', {
       events: events,
       email: email
