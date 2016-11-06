@@ -9,7 +9,7 @@ var calendar = google.calendar('v3')
  * @param {Object} event Event data to be pushed to Google
  * @param {Date} event.start Start time for event
  * @param {Date} event.end End time for event
- * @param {string} event.title Title text for event
+ * @param {string} event.summary Summary text for event
  * @param {function} callback function to be called after API call is made
  * @param {String} calendarId Calendar on which to put this event, defaults to primary
  */
