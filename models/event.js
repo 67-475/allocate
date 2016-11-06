@@ -21,6 +21,9 @@ Validator.prototype.customFormats.notBackwards = (input) => {
 
     // should not have times out of order
     if(start.getTime() >= end.getTime()) { return false }
+
+    // should not start in the past
+    if(start.getTime() <= new Date().getTime()) { return false }
   } catch (err) {
     console.error('Could not parse start and end times')
     return false
