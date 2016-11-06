@@ -29,7 +29,6 @@ function createEvent(oauth2Client, event, callback, calendarId = 'primary') {
     if (err) {
       console.error(err.stack)
     } else {
-      console.log(response)
       callback(response)
     }
   })
