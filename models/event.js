@@ -6,11 +6,7 @@ var schema = {
   id: '/settings',
   type: 'object',
   format: 'notBackwards',
-  properties: {
-    start: { type: 'string' },
-    end: { type: 'string' },
-    summary: { type: 'string' }
-  }
+  required: ['start', 'end', 'summary']
 }
 
 /**
@@ -19,7 +15,17 @@ var schema = {
  * @return {Boolean} result result of validation
  */
 Validator.prototype.customFormats.notBackwards = (input) => {
-  console.log(input)
+  try {
+    const start = new Date(input.start)
+    const end = new Date(input.end)
+
+    // should not have times out of order
+    if(start.getTime() >= end.getTime()) { return false }
+  } catch (err) {
+    console.error('Could not parse start and end times')
+    return false
+  }
+
   return true
 }
 
