@@ -98,3 +98,57 @@ function toggleFormExtras() {
 $(function() {
     fetchUserDefaultSettings()
 })
+
+
+
+
+// Code for making iFrame
+
+function addCalendarToPage(cal) {
+    var tbody = $("#tbody")
+
+    var container = $('<tr></tr>')
+
+
+    // summary
+    container.append("<td>" + cal.id + "</td>")
+    container.append("<td>" + cal.summary + "</td>")
+    container.append("<td>" + cal.description + "</td>")
+    container.append("<td>" + cal.backgroundColor + "</td>")
+    container.append("<td>" + cal.foregroundColor + "</td>")
+
+
+    tbody.append(container)
+}
+
+$(function() {
+    var iFrameSourceString = "https://calendar.google.com/calendar/embed?mode=WEEK&height=600&wkst=1&bgcolor=%23FFFFFF&"
+
+    var colorsArray = ["A32929", "B1365F", "7A367A", "5229A3", "29527A", "2952A3", "1B887A", "28754E", "0D7813", "528800", "88880E", "AB8B00", "AB8B00", "B1440E", "865A5A", "705770", "4E5D6C", "5A6986", "4A716C", "6E6E41", "8D6F47", "853104", "691426", "5C1158", "23164E", "182C57", "060D5E", "125A12", "2F6213", "2F6309", "5F6B02", "875509", "8C500B", "754916", "6B3304", "5B123B", "42104A", "113F47", "333333", "0F4B38", "856508", "711616"]
+    var colorsArrayIndex = 0
+
+    for (var i = 0; i < calendars.length; i++) {
+        var cal = calendars[i]
+        addCalendarToPage(cal)
+
+        if (colorsArrayIndex >= colorsArray.length) {
+            colorsArrayIndex = 0
+        }
+
+        iFrameSourceString = iFrameSourceString + "&src=" + encodeURIComponent(cal.id) + "&color=%23" + colorsArray[colorsArrayIndex]
+
+        colorsArrayIndex++;
+    };
+
+    iFrameSourceString += "&ctz=America%2FNew_York"
+
+    var $iFrame = $("<iFrame>", {"src": iFrameSourceString, "style": "border-width:0", "width": "100%", "height": "600px", "frameborder": "0", "scrolling": "no"})
+
+    $("#iFrameDiv").append($iFrame);
+})
+
+
+
+
+
+

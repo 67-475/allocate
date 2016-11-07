@@ -4,3 +4,4 @@ config/auth.json
 out/
 db/
 *.lock
+.DS_Store
