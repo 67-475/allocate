@@ -108,6 +108,8 @@ function authorize (req, res) {
 }
 
 var event = require('../app/events.js')
+var calendar = require('../app/calendars.js')
+
 /**
  * Get events from Google Calendar
  * @param  {Object} req express.js request
@@ -116,26 +118,16 @@ var event = require('../app/events.js')
 function getHomeEvent(req, res) {
   const email = scrambler.decrypt(req.cookies.auth)
   var client = oauth2Clients[email]
-
-  event.home(client, (events) => {
-    res.render('home', {
-      events: events,
-      email: email
+  calendar.getCalendars(client, (calendars) => {
+    event.home(client, (events) => {
+      res.render('home', {
+        events: events,
+        email: email,
+        calendars: calendars
+      })
     })
   })
 
-}
-
-var calendar = require('../app/calendars.js')
-
-function calendars(req, res) {
-  var client = oauth2Clients[scrambler.decrypt(req.cookies.auth)]
-
-  var calendars = calendar.getCalendars(client, (calendars) => {
-    res.render('calendars', {
-      calendars: calendars
-    })
-  })
 }
 
 /**
@@ -196,7 +188,6 @@ exports.init = (app) => {
   app.get('/login', login)
   app.get('/logout', is_logged_in, logout)
   app.get('/auth', authorize)
-  app.get('/calendars',is_logged_in, calendars)
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettingsPage)
   app.get('/settings/:email', is_logged_in, getSettings)
