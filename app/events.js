@@ -40,7 +40,7 @@ function createEvent(oauth2Client, event, callback, calendarId = 'primary') {
                                  with which to make API call
   * @param {function} callback function to be called with results of API call
   */
-function home (oauth2Client, callback) {
+function getEvents (oauth2Client, callback) {
   calendar.events.list({
     auth: oauth2Client,
     calendarId: 'primary',
@@ -65,5 +65,5 @@ function home (oauth2Client, callback) {
 
 module.exports = {
   createEvent: createEvent,
-  home: home
+  getEvents: getEvents
 }

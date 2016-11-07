@@ -119,7 +119,7 @@ function getHomeEvent(req, res) {
   const email = scrambler.decrypt(req.cookies.auth)
   var client = oauth2Clients[email]
   calendar.getCalendars(client, (calendars) => {
-    event.home(client, (events) => {
+    event.getEvents(client, (events) => {
       res.render('home', {
         events: events,
         email: email,
@@ -127,7 +127,6 @@ function getHomeEvent(req, res) {
       })
     })
   })
-
 }
 
 /**
@@ -183,6 +182,7 @@ function postSettings(req, res) {
     }
   })
 }
+
 
 exports.init = (app) => {
   app.get('/login', login)
