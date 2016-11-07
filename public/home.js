@@ -55,8 +55,8 @@ function submitTaskForm() {
     wakeTime: wakeTime,
     calendar: calendar
   }
-
-  console.log(data)
+    
+  $("#proposalModal").modal()
 
   $.ajax({
     url: '/allocate',
