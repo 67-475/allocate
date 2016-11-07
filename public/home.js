@@ -68,17 +68,17 @@ function submitTaskForm() {
 
     console.log(data)
 
-    // $.ajax({
-    //     url: '/allocate',
-    //     type: 'POST',
-    //     data: data,
-    //     success: function(data) {
-    //         console.log(data)
-    //     },
-    //     error: function(data) {
-    //         console.log(data)
-    //     }
-    // })
+    $.ajax({
+        url: '/allocate',
+        type: 'POST',
+        data: data,
+        success: function(data) {
+            console.log(data)
+        },
+        error: function(data) {
+            console.log(data)
+        }
+    })
 
 }
 
@@ -146,9 +146,3 @@ $(function() {
 
     $("#iFrameDiv").append($iFrame);
 })
-
-
-
-
-
-
