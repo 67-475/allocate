@@ -9,6 +9,7 @@
 
         <script type="text/javascript">
             var events = <%- JSON.stringify(events) %>
+            var email = <%- JSON.stringify(email) %>
         </script>
         <script src="/home.js" type="text/javascript"></script>
     </head>
@@ -18,63 +19,59 @@
         <nav class="navbar navbar-light bg-faded">
             <a class="navbar-brand" href="#"><%= email %></a>
             <span class="navbar-text float-xs-right text-muted">
-                <a class="btn btn-primary" href='/settings' role="button">Settings</a>
-                <a class="btn btn-primary" href='/logout' role="button">Logout</a>
+              <a class="btn btn-primary" href='/' role="button">Home</a>
+              <a class="btn btn-primary" href='/settings' role="button">Settings</a>
+              <a class="btn btn-primary" href='/logout' role="button">Logout</a>
             </span>
         </nav>
-
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Summary</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Location</th>
-                    <th>Reminders?<th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-            </tbody>
-        </table>
-
+        <br/>
         <form class="row">
             <div class="form-group col-sm-8 offset-sm-2">
               <label for="eventTitle" class="col-xs-4 col-form-label">Event Title:</label>
               <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="German homework..." id="eventTitle">
+                <input class="form-control" type="text" placeholder="German homework..." id="eventTitle" onfocus="showFormExtras()" onblur="toggleFormExtras()">
               </div>
             </div>
-            <div class="form-group col-sm-8 offset-sm-2">
-              <label for="estimatedHours" class="col-xs-4 col-form-label">Estimated Hours:</label>
-              <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="12" id="estimatedHours">
+            <div id="formExtras" style="display: none;">
+              <div class="form-group col-sm-8 offset-sm-2">
+                <label for="estimatedHours" class="col-xs-4 col-form-label">Estimated Hours:</label>
+                <div class="col-xs-8">
+                  <input class="form-control" type="number" placeholder="12" id="estimatedHours">
+                </div>
               </div>
-            </div>
-            <div class="form-group col-sm-8 offset-sm-2">
-              <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
-              <div class="col-xs-8">
-                <input class="form-control" type="datetime-local" id="estimatedDate">
+              <div class="form-group col-sm-8 offset-sm-2">
+                <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
+                <div class="col-xs-8">
+                  <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="dueDate">
+                </div>
               </div>
-            </div>
-            <div class="form-group col-sm-8 offset-sm-2">
-              <label for="workTimePreference" class="col-xs-4 col-form-label">Work Time Preference:</label>
-              <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="12" id="workTimePreference">
+              <div class="form-group col-sm-8 offset-sm-2">
+                <label for="workTimePreference" class="col-xs-4 col-form-label">Work Time Preference:</label>
+                <div class="col-xs-8">
+                  <select class="form-control" id="workTimePreference">
+                    <option value="m">Morning</option>
+                    <option value="a">Afternoon</option>
+                    <option value="e">Evening</option>
+                    <option value="n">Night</option>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div class="form-group col-sm-8 offset-sm-2">
-              <label for="sleepTime" class="col-xs-4 col-form-label">Sleep Time:</label>
-              <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="12" id="sleepTime">
+              <div class="form-group col-sm-8 offset-sm-2">
+                <label for="sleepTime" class="col-xs-4 col-form-label">Sleep Time:</label>
+                <div class="col-xs-8">
+                  <input class="form-control" type="time" value="13:45:00" id="sleepTime">
+                </div>
               </div>
-            </div>
-            <div class="form-group col-sm-8 offset-sm-2">
-              <label for="wakeTime" class="col-xs-4 col-form-label">Wake Time:</label>
-              <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="12" id="wakeTime">
+              <div class="form-group col-sm-8 offset-sm-2">
+                <label for="wakeTime" class="col-xs-4 col-form-label">Wake Time:</label>
+                <div class="col-xs-8">
+                  <input class="form-control" type="time" value="13:45:00" id="wakeTime">
+                </div>
               </div>
+              <button type="button" class="btn btn-primary offset-sm-3 col-sm-6" onclick="submitTaskForm()">Allocate Task</button>
             </div>
         </form>
+
 
         <iframe src="https://calendar.google.com/calendar/embed?src=<%= email %>&ctz=America/New_York" style="border: 0; width: 100%; height: 600px" frameborder="0" scrolling="no"></iframe>
         <script>
