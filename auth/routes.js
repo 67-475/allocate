@@ -189,6 +189,11 @@ function postSettings(req, res) {
 }
 
 const allocate = require('../app/allocate')
+/**
+ * Allocate events for a user based on a given project
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
+ */
 function postProject(req, res) {
   const email = scrambler.decrypt(req.cookies.auth)
   const client = oauth2Clients[email]
