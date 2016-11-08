@@ -189,6 +189,11 @@ function postSettings(req, res) {
 }
 
 const allocate = require('../app/allocate')
+function postProject(req, res) {
+  const email = scrambler.decrypt(req.cookies.auth)
+  const client = oauth2Clients[email]
+  allocate(client, req.body, res)
+}
 
 exports.init = (app) => {
   app.get('/login', login)
@@ -199,5 +204,5 @@ exports.init = (app) => {
   app.get('/settings/:email', is_logged_in, getSettings)
 
   app.post('/settings', is_logged_in, postSettings)
-  app.post('/allocate', is_logged_in, allocate)
+  app.post('/allocate', is_logged_in, postProject)
 }
