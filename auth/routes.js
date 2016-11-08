@@ -107,14 +107,9 @@ function authorize (req, res) {
   })
 }
 
-<<<<<<< HEAD
 var event = require('../app/events.js')
 var calendar = require('../app/calendars.js')
 
-=======
-
-var event = require('../app/events')
->>>>>>> basic handling of project allocation data
 /**
  * Get events from Google Calendar
  * @param {Object} req express.js request
