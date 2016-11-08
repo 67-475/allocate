@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var buster = {}
 const today = new Date()
 
-describe('models/model.js', () => {
+describe('models/event.js', () => {
 
   before(() => {
     buster = {
