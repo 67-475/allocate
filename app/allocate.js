@@ -6,7 +6,8 @@ var model = require('../models/event')
  * Actually divide up project into events based on a given email's calendar
  * Will call events.createEvent with each generated event
  * @param {Object} project A description of the overall event
- * @param {string} email string with which
+ * @param {OAuth2} oauth2Client Authorized auth instance of google.auth.OAuth2
+                                with which to make API call
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, oauth2Client, callback) {
@@ -14,9 +15,8 @@ function divvy(project, oauth2Client, callback) {
 
   // eventually this will be evaluation of the allocation process
   // TODO: actually implement the allocation
-  const result = true
 
-  callback(result)
+  callback(true)
 }
 
 /**
