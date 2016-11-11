@@ -39,7 +39,7 @@ var login_link = server_auth.generateAuthUrl({
  * and correctly authorized
  * @param {Object} req Express.js request
  * @param {Object} res Express.js response
- * @param  {Function} next next piece of request handling
+ * @param {Function} next next piece of request handling
  */
 function is_logged_in (req, res, next) {
   if (req.cookies.auth && scrambler.decrypt(req.cookies.auth) in oauth2Clients) {
@@ -112,8 +112,8 @@ var calendar = require('../app/calendars.js')
 
 /**
  * Get events from Google Calendar
- * @param  {Object} req express.js request
- * @param  {Object} res express.js response
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
  */
 function getHomeEvent(req, res) {
   const email = scrambler.decrypt(req.cookies.auth)
@@ -131,8 +131,8 @@ function getHomeEvent(req, res) {
 
 /**
  * Get the settings page for a user
- * @param  {Object} req express.js request
- * @param  {Object} res express.js response
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
  */
 function getSettingsPage(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
@@ -149,8 +149,8 @@ function getSettingsPage(req, res) {
 
 /**
  * Getthe settings for a user
- * @param  {Object} req express.js request
- * @param  {Object} res express.js response
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
  */
 function getSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
@@ -167,8 +167,8 @@ function getSettings(req, res) {
 
 /**
  * Post the settings for a user
- * @param  {Object} req express.js request
- * @param  {Object} res express.js response
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
  */
 function postSettings(req, res) {
   var email = scrambler.decrypt(req.cookies.auth)
@@ -183,6 +183,17 @@ function postSettings(req, res) {
   })
 }
 
+const allocate = require('../app/allocate')
+/**
+ * Allocate events for a user based on a given project
+ * @param {Object} req express.js request
+ * @param {Object} res express.js response
+ */
+function postProject(req, res) {
+  const email = scrambler.decrypt(req.cookies.auth)
+  const client = oauth2Clients[email]
+  allocate(client, req.body, res)
+}
 
 exports.init = (app) => {
   app.get('/login', login)
@@ -191,5 +202,7 @@ exports.init = (app) => {
   app.get('/', is_logged_in, getHomeEvent)
   app.get('/settings', is_logged_in, getSettingsPage)
   app.get('/settings/:email', is_logged_in, getSettings)
+
   app.post('/settings', is_logged_in, postSettings)
+  app.post('/allocate', is_logged_in, postProject)
 }

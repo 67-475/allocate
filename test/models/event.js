@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var buster = {}
 const today = new Date()
 
-describe('models/model.js', () => {
+describe('models/event.js', () => {
 
   before(() => {
     buster = {
@@ -16,11 +16,6 @@ describe('models/model.js', () => {
 
   it('should validate a correct model object', () => {
     assert.isTrue(event.check(buster).length == 0)
-  })
-  
-  it('should not let you start an event in the past', () => {
-    buster.start = new Date('' + (today.getFullYear()) - 1),
-    assert.isTrue(event.check(buster).length == 1)
   })
 
   it('should not let you start before you begin', () => {
