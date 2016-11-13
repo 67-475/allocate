@@ -10,6 +10,9 @@
       var settings = <%- JSON.stringify(settings) %>
     </script>
     <script src="/settings.js"></script>
+    <style>
+      .col-xs-10 { padding-left: 0px; padding-top: 10px; }
+    </style>
   </head>
 
   <body>
@@ -27,32 +30,26 @@
         <div class="container">
           <form class="form-inline">
             <div class="form-group">
-              <label for="workTimePreference">Work time preference:</label>
-              <select class="form-control" id="workTimePreference">
-                <option value="m">Morning</option>
-                <option value="a">Afternoon</option>
-                <option value="e">Evening</option>
-                <option value="n">Night</option>
-              </select>
-            </div>
-          </form>
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="sleepTime">What time do you go to sleep?</label>
               <div class="col-xs-10">
+                <label for="workTimePreference">Work time preference:</label>
+                <select class="form-control" id="workTimePreference">
+                  <option value="m">Morning</option>
+                  <option value="a">Afternoon</option>
+                  <option value="e">Evening</option>
+                  <option value="n">Night</option>
+                </select>
+              </div>
+              <div class="col-xs-10">
+                <label for="sleepTime">What time do you go to sleep?</label>
                 <input class="form-control" type="time" value="23:30:00" id="sleepTime">
               </div>
-            </div>
-          </form>
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="wakeTime">What time do you wake up?</label>
               <div class="col-xs-10">
+                <label for="wakeTime">What time do you wake up?</label>
                 <input class="form-control" type="time" value="08:00:00" id="wakeTime">
               </div>
             </div>
-          </form>
           <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+        </form>
         </div>
     </div>
 
