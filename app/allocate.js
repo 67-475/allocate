@@ -50,6 +50,18 @@ function divvy(project, oauth2Client, callback) {
   }) // events.getEvents
 }
 
+function getUserPreferences(email, callback) {
+  db.get(email, (err, results) => {
+    if (err) {
+      console.error(err)
+      callback(err)
+    } else {
+      console.log(results, results.bestTime, results.sleepTime)
+      callback(results)
+    }
+  })
+}
+
 /**
  * Handles project posting description from the user and
  * allocates events on their calendar appropriately
@@ -58,7 +70,7 @@ function divvy(project, oauth2Client, callback) {
  * @param {Object} projectData description of project
  * @param {Object} res express.js response
  */
-function postProject(oauth2Client, projectData, res) {
+function postProject(email, oauth2Client, projectData, res) {
   var project = {}
   try {
     // want to start project at the next given preferred time
@@ -88,7 +100,7 @@ function postProject(oauth2Client, projectData, res) {
             res.sendStatus(201)
           }
         })
-      })
+     })
     }
   } catch (err) {
     console.error(err)

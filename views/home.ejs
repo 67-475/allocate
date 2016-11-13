@@ -3,7 +3,7 @@
         <meta http-equiv="X-Frame-Options" content="allow">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
+        <script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.3.1/js/tether.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
         <script src="https://use.fontawesome.com/f8ebc31515.js"></script>
@@ -48,7 +48,7 @@
               <div class="form-group col-sm-8 offset-sm-2">
                 <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
                 <div class="col-xs-8">
-                  <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id = "dueDate" name="dueDate">
+                  <input class="form-control" type="datetime-local" value="2017-01-01T12:00:00" id="dueDate">
                 </div>
               </div>
               <div class="form-group col-sm-8 offset-sm-2">
@@ -65,7 +65,7 @@
               <div class="form-group col-sm-8 offset-sm-2">
                 <label for="calendar" class="col-xs-4 col-form-label">Calendar:</label>
                 <div class="col-xs-8">
-                  <select class="form-control" name="calendar" id = "calendar">
+                  <select class="form-control">
                     <% for(var i=0; i<calendars.length; i++) {%>
                       <option value="<%= calendars[i].id %>"><%= calendars[i].summary %></option>
                     <% } %>
