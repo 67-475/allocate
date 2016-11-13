@@ -6,12 +6,19 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/f8ebc31515.js"></script>
     <script>
       var settings = <%- JSON.stringify(settings) %>
     </script>
     <script src="/settings.js"></script>
     <style>
+      /* form styling */
       .col-xs-10 { padding-left: 0px; padding-top: 10px; }
+
+      /* loading icon styling */
+      #postStatus { font-size: 16px; }
+      .fa-check { color: green }
+      .fa-times { color: red }
     </style>
   </head>
 
@@ -49,6 +56,7 @@
               </div>
             </div>
           <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+          <i id='postStatus'></i>
         </form>
         </div>
     </div>

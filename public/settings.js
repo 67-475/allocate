@@ -27,17 +27,16 @@ $(function() {
 })
 
 var submitForm = function() {
+  postStatus.className = 'fa fa-cog fa-refresh fa-3x fa-fw'
   var bestTime = $("#workTimePreference").val()
   var sleepTime = $("#sleepTime").val()
   var wakeTime = $("#wakeTime").val()
 
   // format sleep time
   var formattedSleepTime = sleepTime.replace(":", "").substr(0, 4)
-  console.log(formattedSleepTime)
 
   // format wake time
   var formattedWakeTime = wakeTime.replace(":", "").substr(0, 4)
-  console.log(formattedWakeTime)
 
   var data = {
     bestTime: bestTime,
@@ -49,10 +48,11 @@ var submitForm = function() {
     method: 'POST',
     data: data,
     success: function(data) {
-      console.log(data)
+      postStatus.className = 'fa fa-check'
     },
     error: function(err) {
       console.log(err)
+      postStatus.className = 'fa fa-times'
     }
   })
 }
