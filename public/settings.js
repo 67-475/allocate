@@ -27,7 +27,7 @@ $(function() {
 })
 
 var submitForm = function() {
-  postStatus.className = 'fa fa-cog fa-refresh fa-3x fa-fw'
+  postStatus.className = 'fa fa-spin fa-refresh fa-3x fa-fw'
   var bestTime = $("#workTimePreference").val()
   var sleepTime = $("#sleepTime").val()
   var wakeTime = $("#wakeTime").val()
