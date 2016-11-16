@@ -17,11 +17,11 @@ function divvy(project, oauth2Client, callback) {
       callback(false)
     }
     console.log(calendarEvents)
+    // eventually this will be evaluation of the allocation process
+    // TODO: actually implement the allocation
     callback(true)
   })
 
-  // eventually this will be evaluation of the allocation process
-  // TODO: actually implement the allocation
 }
 
 /**

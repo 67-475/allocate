@@ -45,8 +45,8 @@ function getEvents (project, oauth2Client, callback) {
   calendar.events.list({
     auth: oauth2Client,
     calendarId: 'primary',
-    timeMin: project.start.toISOString(),
-    timeMax: project.end.toISOString(),
+    timeMax: formatDate(project.end),
+    timeMin: formatDate(project.start)
   }, (err, response) => {
     if (err) {
       callback(err)
@@ -54,6 +54,18 @@ function getEvents (project, oauth2Client, callback) {
       callback(undefined, response.items)
     }
   })
+}
+
+function formatDate (date) {
+  var iso = date.toISOString()
+  iso = iso.substring(0, iso.length - 1)
+  var offset = (date.getTimezoneOffset() / 100) + 1
+  offset = offset + ":00"
+  if (offset.length < 5) {
+    offset = "0" + offset
+  }
+
+  return iso + "-" + offset
 }
 
 
