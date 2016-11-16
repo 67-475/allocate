@@ -122,15 +122,13 @@ function getEventsUpTo (projectEnd, oauth2Client, calendarId, callback) {
   }, (err, response) => {
     if (err) {
       // console.error('The API returned: ' + err)
-      console.log('reach callback call within iteratee function')
-      callback(null, null)
+      callback(null)
     } else {
       var events = response.items
       if (events.length === 0) {
-        callback('No upcoming events')
+        callback(null)
       } else {
-        console.log('reach callback call within iteratee function')
-        callback(null, events)
+        callback(events)
       }
     }
   })
