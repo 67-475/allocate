@@ -58,18 +58,24 @@ function submitTaskForm() {
     
   $("#proposalModal").modal()
 
-  $.ajax({
-    url: '/allocate',
-    type: 'POST',
-    data: data,
-    success: () => {
-      postStatus.className = 'fa fa-check'
-    },
-    error: (err) => {
-      console.error(err)
-      postStatus.className = 'fa fa-times'
-    }
-  })
+    console.log(data)
+
+    $.ajax({
+        url: '/allocate',
+        type: 'POST',
+        data: data,
+        success: function(data) {
+            console.log(data)
+            $("#proposalModal").on("show.bs.modal", function(e) {
+                $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
+            })
+            $("#proposalModal").modal()
+        },
+        error: function(data) {
+            console.log(data)
+            postStatus.className = 'fa fa-times'
+        }
+    })
 }
 
 function showFormExtras() {
