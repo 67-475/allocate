@@ -6,10 +6,20 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/f8ebc31515.js"></script>
     <script>
       var settings = <%- JSON.stringify(settings) %>
     </script>
     <script src="/settings.js"></script>
+    <style>
+      /* form styling */
+      .col-xs-10 { padding-left: 0px; padding-top: 10px; }
+
+      /* loading icon styling */
+      #postStatus { font-size: 16px; }
+      .fa-check { color: green }
+      .fa-times { color: red }
+    </style>
   </head>
 
   <body>
@@ -25,35 +35,29 @@
 
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-          <h1 class="display-3">Settings</h1>
           <form class="form-inline">
             <div class="form-group">
-              <label for="workTimePreference">Work time preference:</label>
-              <select class="form-control" id="workTimePreference">
-                <option value="m">Morning</option>
-                <option value="a">Afternoon</option>
-                <option value="e">Evening</option>
-                <option value="n">Night</option>
-              </select>
-            </div>
-          </form>
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="sleepTime">What time do you go to sleep?</label>
               <div class="col-xs-10">
-                <input class="form-control" type="time" value="13:45:00" id="sleepTime">
+                <label for="workTimePreference">Work time preference:</label>
+                <select class="form-control" id="workTimePreference">
+                  <option value="m">Morning</option>
+                  <option value="a">Afternoon</option>
+                  <option value="e">Evening</option>
+                  <option value="n">Night</option>
+                </select>
+              </div>
+              <div class="col-xs-10">
+                <label for="sleepTime">What time do you go to sleep?</label>
+                <input class="form-control" type="time" value="23:30:00" id="sleepTime">
+              </div>
+              <div class="col-xs-10">
+                <label for="wakeTime">What time do you wake up?</label>
+                <input class="form-control" type="time" value="08:00:00" id="wakeTime">
               </div>
             </div>
-          </form>
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="wakeTime">What time do you wake up?</label>
-              <div class="col-xs-10">
-                <input class="form-control" type="time" value="13:45:00" id="wakeTime">
-              </div>
-            </div>
-          </form>
           <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+          <i id='postStatus'></i>
+        </form>
         </div>
     </div>
 
