@@ -15,13 +15,13 @@ function inputUserDefaultSettings(settings) {
     $("#workTimePreference").val(bestTime)
 
     // format sleep time form
-    var formattedSleepTime = sleepTime.substr(0, 2) + ":" + 
+    var formattedSleepTime = sleepTime.substr(0, 2) + ":" +
     sleepTime.substr(2) + ":00"
 
     $("#sleepTime").val(formattedSleepTime)
 
     // format wake time form
-    var formattedWakeTime = wakeTime.substr(0, 2) + ":" + 
+    var formattedWakeTime = wakeTime.substr(0, 2) + ":" +
     wakeTime.substr(2) + ":00"
 
     $("#wakeTime").val(formattedWakeTime)
@@ -95,7 +95,6 @@ function submitTaskForm() {
         }
     })
 }
-
 function showFormExtras() {
   $('#formExtras').show()
 }
@@ -158,7 +157,7 @@ $(() => {
     colorsArrayIndex++
   };
     var $iFrame = $("<iFrame>", {"id":"iFrame", "src": iFrameSourceString, 
-        "style": "border-width:0", "width": "100%", "height": "600px", 
+        "style": "border-width:0", "width": "100%", "height": "600px",
         "frameborder": "0", "scrolling": "no"})
 
   iFrameSourceString += '&ctz=America%2FNew_York'

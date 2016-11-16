@@ -31,7 +31,7 @@
             </span>
         </nav>
         <br/>
-        <form class="row">
+        <form class="row" method="post" action = "/allocate" id = "projectForm">
             <div class="form-group col-sm-8 offset-sm-2">
               <label for="eventTitle" class="col-xs-4 col-form-label">Event Title:</label>
               <div class="col-xs-8">
@@ -48,7 +48,7 @@
               <div class="form-group col-sm-8 offset-sm-2">
                 <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
                 <div class="col-xs-8">
-                  <input class="form-control" type="datetime-local" value="2017-01-01T12:00:00" id="dueDate">
+                  <input class="form-control" type="datetime-local" value="2017-01-01T12:00:00" name="dueDate">
                 </div>
               </div>
               <div class="form-group col-sm-8 offset-sm-2">
