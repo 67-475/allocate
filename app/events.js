@@ -35,6 +35,22 @@ function createEvent(oauth2Client, event, callback, calendarId = 'primary') {
 }
 
 /**
+ * Format Date to conform with what Google APIs want
+ * @param {Date} date
+ * @return {String} representation
+ */
+function formatDate (date) {
+  var iso = date.toISOString()
+  iso = iso.substring(0, iso.length - 1)
+  var offset = (date.getTimezoneOffset() / 100) + 1 + ":00"
+  if (offset.length < 5) {
+    offset = "0" + offset
+  }
+
+  return iso + "-" + offset
+}
+
+/**
   * Pulls Google Calendar events given a client
   * @param {Object} project Project in which the span of events are
   * @param {OAuth2} oauth2Client Authorized auth instance of google.auth.OAuth2
@@ -55,19 +71,6 @@ function getEvents (project, oauth2Client, callback) {
     }
   })
 }
-
-function formatDate (date) {
-  var iso = date.toISOString()
-  iso = iso.substring(0, iso.length - 1)
-  var offset = (date.getTimezoneOffset() / 100) + 1
-  offset = offset + ":00"
-  if (offset.length < 5) {
-    offset = "0" + offset
-  }
-
-  return iso + "-" + offset
-}
-
 
 module.exports = {
   createEvent: createEvent,
