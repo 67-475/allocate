@@ -50,15 +50,6 @@ function divvy(project, oauth2Client, callback) {
   }) // events.getEvents
 }
 
-function addEventsToCalendar(calendar, startTimes, oauth2Client) {
-  for (var i = 0; i < startTimes.length; i++) {
-    var event = { start: startTimes[i], end: startTimes[i].getHours()+1 }
-    events.createEvent(oauth2Client, event, (results) => {
-
-    }, calendar)
-  };
-}
-
 function getUserPreferences(email, callback) {
   db.get(email, (err, results) => {
     if (err) {

@@ -11,6 +11,9 @@ class TimeSlotsArray extends Array {
     startDate.setMilliseconds(0)
     endDate.setMinutes(endDate.getMinutes() - (endDate.getMinutes() % 15))
 
+    // startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset())
+    // endDate.setMinutes(endDate.getMinutes() + endDate.getTimezoneOffset())
+
     this.startDate = startDate
     this.endDate = endDate
     this.numberOfSlots = (endDate.getTime()-startDate.getTime()) / FIFTEEN_MINUTES
@@ -30,6 +33,7 @@ class TimeSlotsArray extends Array {
       var slotLength = (eventEnd.getTime()-eventStart.getTime()) / FIFTEEN_MINUTES
       for (var j = 0; j < slotLength; j++) {
         this[slotStartIndex+j].free = false;
+        // console.log(this[slotStartIndex+j])
       };
     };
   }
@@ -58,6 +62,11 @@ class TimeSlotsArray extends Array {
       sleepEnd.setDate(sleepEnd.getDate() + 1)
     }
 
+    sleepStart.setMinutes(sleepStart.getMinutes() - sleepStart.getTimezoneOffset())
+    sleepEnd.setMinutes(sleepEnd.getMinutes() - sleepEnd.getTimezoneOffset())
+    console.log(sleepStart)
+    console.log(sleepEnd)
+
     for (var i = 0; i < this.length; i++) {
       if (this[i].startTime.getHours() > sleepStart.getHours() &&
         this[i].startTime.getMinutes() > sleepStart.getMinutes() &&
@@ -83,6 +92,8 @@ class TimeSlotsArray extends Array {
         hourBeginningSlots.push(this[i])
       }
     };
+    // console.log(hourBeginningSlots[0])
+    console.log(this)
     var interval = Math.floor(hourBeginningSlots.length/Math.ceil(estimatedHours))
     for (var i = 0; i < Math.ceil(estimatedHours); i++) {
       startTimes.push(hourBeginningSlots[i*interval].startTime)
