@@ -48,7 +48,6 @@ function divvy(project, oauth2Client, callback) {
       }, () => { allocatedEvents.push(event); done() }) // async.whilst
     }, () => { callback(allocatedEvents) }) // async.each
   }) // events.getEvents
-}
 
 function getUserPreferences(email, callback) {
   db.get(email, (err, results) => {
