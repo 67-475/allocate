@@ -1,6 +1,7 @@
 /* eslint no-console:0 */
 var model = require('../models/event')
 var events = require('./events')
+const ONE_DAY = 1000 * 60 * 60 * 24
 
 /**
  * Actually divide up project into events based on a given email's calendar
@@ -16,12 +17,24 @@ function divvy(project, oauth2Client, callback) {
       console.error(err)
       callback(false)
     }
-    console.log(calendarEvents)
-    // eventually this will be evaluation of the allocation process
-    // TODO: actually implement the allocation
+    var allocatedEvents = []
+    const days = Math.floor((project.end - project.start) / ONE_DAY) + 1
+    var length = Math.floor(project.hours / days)
+    // now will allocate a slot each day over the course of days days
+    for(var i = 0; i < days; i ++) {
+      allocatedEvents.push(createEvent(project.start, length, i))
+    }
+    console.log(allocatedEvents)
+
     callback(true)
   })
+}
 
+function createEvent(start, length, daysAfter) {
+  return {
+    start: start.getTime() + ONE_DAY * daysAfter,
+    end: start.getTime() + ONE_DAY * daysAfter + length
+  }
 }
 
 /**
@@ -38,7 +51,8 @@ function postProject(oauth2Client, projectData, res) {
     project = {
       start: new Date(new Date().getTime() + 5000), // start 5 seconds from now
       end: new Date(projectData.dueDate),
-      summary: projectData.eventTitle
+      summary: projectData.eventTitle,
+      hours: projectData.estimatedHours
     }
 
     const errors = model.check(project)

@@ -46,7 +46,7 @@ function getEvents (project, oauth2Client, callback) {
     auth: oauth2Client,
     calendarId: 'primary',
     timeMax: formatDate(project.end),
-    timeMin: formatDate(project.start)
+    timeMin: formatDate(project.start),
   }, (err, response) => {
     if (err) {
       callback(err)
