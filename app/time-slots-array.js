@@ -33,7 +33,7 @@ class TimeSlotsArray extends Array {
       };
     };
   }
-  
+
   markSleepTime(preferences) {
     var startString = preferences.sleepTimes[0]
     var endString = preferences.sleepTimes[1]
@@ -70,6 +70,24 @@ class TimeSlotsArray extends Array {
 
   markPreferredTimes(preferences) {
     // later
+  }
+
+  getStartTimes(estimatedHours) {
+    var hourBeginningSlots = new Array()
+    var startTimes = new Array()
+    for (var i = 0; i < this.length-3; i++) {
+      if (this[i].free && !this[i].sleepTime &&
+        this[i+1].free && !this[i+1].sleepTime &&
+        this[i+2].free && !this[i+2].sleepTime &&
+        this[i+3].free && !this[i+3].sleepTime) {
+        hourBeginningSlots.push(this[i])
+      }
+    };
+    var interval = Math.floor(hourBeginningSlots.length/Math.ceil(estimatedHours))
+    for (var i = 0; i < Math.ceil(estimatedHours); i++) {
+      startTimes.push(hourBeginningSlots[i*interval].startTime)
+    };
+    return startTimes
   }
 }
 
