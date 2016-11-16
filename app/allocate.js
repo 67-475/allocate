@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
 var model = require('../models/event')
-// var events = require('./events')
+var events = require('./events')
 
 /**
  * Actually divide up project into events based on a given email's calendar
@@ -11,12 +11,17 @@ var model = require('../models/event')
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, oauth2Client, callback) {
-  console.log(project, oauth2Client)
+  events.getEvents(project, oauth2Client, (err, calendarEvents) => {
+    if (err) {
+      console.error(err)
+      callback(false)
+    }
+    console.log(calendarEvents)
+    callback(true)
+  })
 
   // eventually this will be evaluation of the allocation process
   // TODO: actually implement the allocation
-
-  callback(true)
 }
 
 /**

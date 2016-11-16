@@ -36,28 +36,22 @@ function createEvent(oauth2Client, event, callback, calendarId = 'primary') {
 
 /**
   * Pulls Google Calendar events given a client
+  * @param {Object} project Project in which the span of events are
   * @param {OAuth2} oauth2Client Authorized auth instance of google.auth.OAuth2
                                  with which to make API call
   * @param {function} callback function to be called with results of API call
   */
-function getEvents (oauth2Client, callback) {
+function getEvents (project, oauth2Client, callback) {
   calendar.events.list({
     auth: oauth2Client,
     calendarId: 'primary',
-    timeMin: (new Date()).toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: 'startTime',
+    timeMin: project.start.toISOString(),
+    timeMax: project.end.toISOString(),
   }, (err, response) => {
     if (err) {
-      console.error('The API returned: ' + err)
+      callback(err)
     } else {
-      var events = response.items
-      if (events.length === 0) {
-        callback('No upcoming events')
-      } else {
-        callback(events)
-      }
+      callback(undefined, response.items)
     }
   })
 }
