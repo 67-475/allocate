@@ -33,13 +33,43 @@ class TimeSlotsArray extends Array {
       };
     };
   }
-
+  
   markSleepTime(preferences) {
-    console.log(preferences)
+    var startString = preferences.sleepTimes[0]
+    var endString = preferences.sleepTimes[1]
+
+    while (startString.length < 4) {
+      startString = '0' + startString
+    }
+    while (endString.length < 4) {
+      endString = '0' + endString
+    }
+
+    var sleepStart = new Date()
+    sleepStart.setTime(0)
+    sleepStart.setHours(startString.slice(0,1))
+    sleepStart.setMinutes(startString.slice(2,3))
+
+    var sleepEnd = new Date()
+    sleepEnd.setTime(0)
+    sleepEnd.setHours(endString.slice(0,1))
+    sleepEnd.setMinutes(endString.slice(2,3))
+    if (sleepEnd < sleepStart) {
+      sleepEnd.setDate(sleepEnd.getDate() + 1)
+    }
+
+    for (var i = 0; i < this.length; i++) {
+      if (this[i].startTime.getHours() > sleepStart.getHours() &&
+        this[i].startTime.getMinutes() > sleepStart.getMinutes() &&
+        this[i].endTime.getHours() < sleepEnd.getHours() &&
+        this[i].endTime.getMinutes() < sleepEnd.getMinutes()) {
+        this[i].sleepTime = true
+      }
+    };
   }
 
   markPreferredTimes(preferences) {
-
+    // later
   }
 }
 
