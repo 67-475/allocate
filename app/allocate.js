@@ -5,20 +5,22 @@ const ONE_DAY = 1000 * 60 * 60 * 24
 
 /**
  * Format events based on given input
- * @param  {Date} start
- * @param  {Integer} length
- * @param  {Integer} daysAfter
+ * @param {Date} start
+ * @param {Integer} length of event in hours
+ * @param {Integer} daysAfter
+ * @param {String} summary
  * @return {Object} event
  */
-function createEvent(start, length, daysAfter) {
+function createEvent(start, length, summary, daysAfter) {
   return {
     start: start.getTime() + ONE_DAY * daysAfter,
-    end: start.getTime() + ONE_DAY * daysAfter + length
+    end: start.getTime() + ONE_DAY * daysAfter + (length * 1000 * 60 * 60),
+    summary: summary + " Part " + (daysAfter + 1)
   }
 }
 
 /**
- * Whether to events Overlap
+ * Whether two events Overlap
  * @param  {Object} allocatedEvent
  * @param  {Object} calendarEvent
  * @return {boolean} result
@@ -46,12 +48,12 @@ function divvy(project, oauth2Client, callback) {
     var length = Math.floor(project.hours / days)
     // now will allocate a slot each day over the course of days days
     for (var i = 0; i < days; i++) {
-      allocatedEvents.push(createEvent(project.start, length, i))
+      allocatedEvents.push(createEvent(project.start, length, project.summary, i))
     }
     console.log(allocatedEvents)
     while (true) {
       // implement checking overlaps
-      break;
+      break
     }
 
     callback(true)
