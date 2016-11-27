@@ -15,8 +15,8 @@ const FIFTEEN_MINUTES = 1000 * 60 * 15
  */
 function divvy(project, oauth2Client, callback) {
   events.getEvents(project, oauth2Client, (error, calendarEvents) => {
-    if (err) {
-      console.error(err)
+    if (error) {
+      console.error(error)
       callback(false)
     }
     var allocatedEvents = []
@@ -26,24 +26,25 @@ function divvy(project, oauth2Client, callback) {
     for (var i = 0; i < days; i++) {
       allocatedEvents.push(events.createAllocatedEvent(project.start, length, project.summary, i))
     }
-    for (var i = 0; i < allocatedEvents.length; i++) {
+    async.each(allocatedEvents, (event, done) => {
       var overlaps = true
       var attempts = 0
       while (overlaps) {
         async.reduce(calendarEvents, true, (prev, cur, next) => {
-          next(null, prev && events.doesOverlap(allocatedEvents[i], cur))
+          next(null, prev && events.doesOverlap(event, cur))
         }, (err, result) => {
           overlaps = result
           if (overlaps) {
-            allocatedEvents[i].start += FIFTEEN_MINUTES
-            allocatedEvents[i].end += FIFTEEN_MINUTES
+            event.start += FIFTEEN_MINUTES
+            event.end += FIFTEEN_MINUTES
             attempts += 1
             // if we cannot put it here, should reallocate event with one fewer day
             if(attempts > (ONE_DAY - length) /  FIFTEEN_MINUTES) { callback([]) }
           }
         }) // async.reduce
       } // while loop
-    } // for loop
+      done()
+    }) // async.each loop
     callback(allocatedEvents)
   }) // events.getEvents
 }
