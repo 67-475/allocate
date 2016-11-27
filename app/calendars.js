@@ -30,5 +30,5 @@ function getCalendars (oauth2Client, callback) {
 // module.exports = getEvents
 
 module.exports = {
-  getCalendars: getCalendars
+  getCalendars
 }
