@@ -1,33 +1,9 @@
 /* eslint no-console:0 */
 var model = require('../models/event')
 var events = require('./events')
+var async = require('async')
 const ONE_DAY = 1000 * 60 * 60 * 24
-
-/**
- * Format events based on given input
- * @param {Date} start
- * @param {Integer} length of event in hours
- * @param {Integer} daysAfter
- * @param {String} summary
- * @return {Object} event
- */
-function createEvent(start, length, summary, daysAfter) {
-  return {
-    start: start.getTime() + ONE_DAY * daysAfter,
-    end: start.getTime() + ONE_DAY * daysAfter + (length * 1000 * 60 * 60),
-    summary: summary + " Part " + (daysAfter + 1)
-  }
-}
-
-/**
- * Whether two events Overlap
- * @param  {Object} allocatedEvent
- * @param  {Object} calendarEvent
- * @return {boolean} result
- */
-function doesOverlap(allocatedEvent, calendarEvent) {
-  return false
-}
+const FIFTEEN_MINUTES = 1000 * 60 * 15
 
 /**
  * Actually divide up project into events based on a given email's calendar
@@ -44,20 +20,32 @@ function divvy(project, oauth2Client, callback) {
       callback(false)
     }
     var allocatedEvents = []
-    const days = Math.floor((project.end - project.start) / ONE_DAY) + 1
+    const days = Math.floor((project.end - project.start) / ONE_DAY) + 2
     var length = Math.floor(project.hours / days)
     // now will allocate a slot each day over the course of days days
     for (var i = 0; i < days; i++) {
-      allocatedEvents.push(createEvent(project.start, length, project.summary, i))
+      allocatedEvents.push(events.createAllocatedEvent(project.start, length, project.summary, i))
     }
-    console.log(allocatedEvents)
-    while (true) {
-      // implement checking overlaps
-      break
-    }
-
-    callback(true)
-  })
+    for(var i = 0; i < allocatedEvents.length; i ++) {
+      var overlaps = true
+      var attempts = 0
+      while (overlaps) {
+        async.reduce(calendarEvents, true, (prev, cur, next) => {
+          next(null, prev && events.doesOverlap(allocatedEvents[i], cur))
+        }, (err, result) => {
+          overlaps = result
+          if(overlaps) {
+            allocatedEvents[i].start += FIFTEEN_MINUTES
+            allocatedEvents[i].end += FIFTEEN_MINUTES
+            attempts += 1
+            // if we cannot put it here, should reallocate event with one fewer day
+            if(attempts > 96) { callback([]) }
+          }
+        }) // async.reduce
+      } // while loop
+    } // for loop
+    callback(allocatedEvents)
+  }) // events.getEvents
 }
 
 /**
@@ -82,7 +70,9 @@ function postProject(oauth2Client, projectData, res) {
     if (errors.length !== 0) {
       res.status(400).send(errors)
     } else {
-      divvy(project, oauth2Client, (result) => {
+      divvy(project, oauth2Client, (allocatedEvents) => {
+        result = allocatedEvents.length > 0
+        console.log(allocatedEvents)
         res.sendStatus(result ? 201 : 500)
       })
     }

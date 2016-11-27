@@ -17,6 +17,7 @@
   "author": "CMU 475 IS",
   "license": "UNLICENSED",
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.2",
@@ -40,7 +41,8 @@
     "eslint-plugin-react": "^6.4.1",
     "jsdoc": "^3.4.2",
     "mocha": "^3.1.2"
-  }, "engines": {
+  },
+  "engines": {
     "node": "6.2.2"
   }
 }
