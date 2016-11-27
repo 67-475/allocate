@@ -1,4 +1,4 @@
-/* eslint no-console:0 */
+/* eslint no-console:0, block-scoped-var:0, no-loop-func:0 */
 var model = require('../models/event')
 var events = require('./events')
 var async = require('async')
@@ -14,7 +14,7 @@ const FIFTEEN_MINUTES = 1000 * 60 * 15
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, oauth2Client, callback) {
-  events.getEvents(project, oauth2Client, (err, calendarEvents) => {
+  events.getEvents(project, oauth2Client, (error, calendarEvents) => {
     if (err) {
       console.error(err)
       callback(false)
@@ -26,7 +26,7 @@ function divvy(project, oauth2Client, callback) {
     for (var i = 0; i < days; i++) {
       allocatedEvents.push(events.createAllocatedEvent(project.start, length, project.summary, i))
     }
-    for(var i = 0; i < allocatedEvents.length; i ++) {
+    for (var i = 0; i < allocatedEvents.length; i++) {
       var overlaps = true
       var attempts = 0
       while (overlaps) {
@@ -34,12 +34,12 @@ function divvy(project, oauth2Client, callback) {
           next(null, prev && events.doesOverlap(allocatedEvents[i], cur))
         }, (err, result) => {
           overlaps = result
-          if(overlaps) {
+          if (overlaps) {
             allocatedEvents[i].start += FIFTEEN_MINUTES
             allocatedEvents[i].end += FIFTEEN_MINUTES
             attempts += 1
             // if we cannot put it here, should reallocate event with one fewer day
-            if(attempts > 96) { callback([]) }
+            if(attempts > (ONE_DAY - length) /  FIFTEEN_MINUTES) { callback([]) }
           }
         }) // async.reduce
       } // while loop
@@ -59,6 +59,8 @@ function divvy(project, oauth2Client, callback) {
 function postProject(oauth2Client, projectData, res) {
   var project = {}
   try {
+    // want to start project at the next given preferred time
+
     project = {
       start: new Date(new Date().getTime() + 5000), // start 5 seconds from now
       end: new Date(projectData.dueDate),
@@ -71,7 +73,7 @@ function postProject(oauth2Client, projectData, res) {
       res.status(400).send(errors)
     } else {
       divvy(project, oauth2Client, (allocatedEvents) => {
-        result = allocatedEvents.length > 0
+        const result = allocatedEvents.length > 0
         console.log(allocatedEvents)
         res.sendStatus(result ? 201 : 500)
       })
