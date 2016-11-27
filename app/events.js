@@ -13,7 +13,7 @@ var calendar = google.calendar('v3')
  * @param {function} callback function to be called after API call is made
  * @param {String} calendarId Calendar on which to put this event, defaults to primary
  */
-function createEvent(oauth2Client, event, callback, calendarId = 'primary') {
+function persistEvent(oauth2Client, event, callback, calendarId = 'primary') {
   const start = event.start.toISOString()
   const end = event.end.toISOString()
 
@@ -32,6 +32,34 @@ function createEvent(oauth2Client, event, callback, calendarId = 'primary') {
       callback(response)
     }
   })
+}
+
+const ONE_DAY = 1000 * 60 * 60 * 24
+/**
+ * Format events based on given input
+ * @param {Date} start
+ * @param {Integer} length of event in hours
+ * @param {Integer} daysAfter
+ * @param {String} summary
+ * @return {Object} event
+ */
+function createAllocatedEvent(start, length, summary, daysAfter) {
+  return {
+    start: start.getTime() + ONE_DAY * daysAfter,
+    end: start.getTime() + ONE_DAY * daysAfter + (length * 1000 * 60 * 60),
+    summary: summary + " Part " + (daysAfter + 1)
+  }
+}
+
+/**
+ * Whether two events Overlap
+ * @param  {Object} allocatedEvent
+ * @param  {Object} calendarEvent
+ * @return {boolean} result
+ */
+function doesOverlap(allocatedEvent, calendarEvent) {
+  console.log(allocatedEvent, calendarEvent)
+  return false
 }
 
 /**
@@ -75,6 +103,7 @@ function getEvents (project, oauth2Client, callback) {
 }
 
 module.exports = {
-  createEvent: createEvent,
-  getEvents: getEvents
+  getEvents,
+  doesOverlap,
+  createAllocatedEvent
 }
