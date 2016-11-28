@@ -1,6 +1,9 @@
-/* eslint no-console:0 */
+/* eslint no-console:0, block-scoped-var:0, no-loop-func:0, no-param-reassign:0 */
 var model = require('../models/event')
-// var events = require('./events')
+var events = require('./events')
+var async = require('async')
+const ONE_DAY = 1000 * 60 * 60 * 24
+const FIFTEEN_MINUTES = 1000 * 60 * 15
 
 /**
  * Actually divide up project into events based on a given email's calendar
@@ -11,12 +14,40 @@ var model = require('../models/event')
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, oauth2Client, callback) {
-  console.log(project, oauth2Client)
+  events.getEvents(project, oauth2Client, (error, calendarEvents) => {
+    if (error) {
+      console.error(error)
+      callback(false)
+    }
+    var before = []
+    const days = Math.floor((project.end - project.start) / ONE_DAY) + 2
+    var length = project.hours / days
+    // now will allocate a slot each day over the course of days days
+    for (var i = 0; i < days; i++) {
+      before.push(events.createAllocatedEvent(project.start, length, project.summary, i))
+    }
+    var allocatedEvents = []
+    async.each(before, (event, done) => {
+      var doesNotOverlap = true
+      var attempts = 0
 
-  // eventually this will be evaluation of the allocation process
-  // TODO: actually implement the allocation
-
-  callback(true)
+      async.whilst(() => doesNotOverlap, (finishedWithLoop) => {
+        async.reduce(calendarEvents, true, (prev, cur, next) => {
+          next(null, prev && events.doesNotOverlap(event, cur))
+        }, (err, result) => {
+          if (!result) { // if it overlaps with something
+            event.start += FIFTEEN_MINUTES
+            event.end += FIFTEEN_MINUTES
+            attempts += 1
+            if (attempts > 96) { callback([]) } // could not allocate before next day
+          } else {
+            doesNotOverlap = false
+          }
+          finishedWithLoop()
+        }) // async.reduce
+      }, () => { allocatedEvents.push(event); done() }) // async.whilst
+    }, () => { callback(allocatedEvents) }) // async.each
+  }) // events.getEvents
 }
 
 /**
@@ -30,23 +61,38 @@ function divvy(project, oauth2Client, callback) {
 function postProject(oauth2Client, projectData, res) {
   var project = {}
   try {
+    // want to start project at the next given preferred time
+
     project = {
       start: new Date(new Date().getTime() + 5000), // start 5 seconds from now
       end: new Date(projectData.dueDate),
-      summary: projectData.eventTitle
+      summary: projectData.eventTitle,
+      hours: projectData.estimatedHours
     }
 
     const errors = model.check(project)
     if (errors.length !== 0) {
+      console.log(errors)
       res.status(400).send(errors)
     } else {
-      divvy(project, oauth2Client, (result) => {
-        res.sendStatus(result ? 201 : 500)
+      divvy(project, oauth2Client, (allocatedEvents) => {
+        async.each(allocatedEvents, (event, done) => {
+          events.persistEvent(oauth2Client, event, (err) => {
+            done(err)
+          })
+        }, (err) => {
+          if (err) {
+            console.log(err.stack)
+            res.sendStatus(500)
+          } else {
+            res.sendStatus(201)
+          }
+        })
       })
     }
   } catch (err) {
-    console.error(err.stack)
-    res.status(500)
+    console.error(err)
+    res.sendStatus(500)
   }
 }
 

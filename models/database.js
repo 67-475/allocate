@@ -16,6 +16,6 @@ function put(email, userSettings, callback) {
 }
 
 module.exports = {
-  get: get,
-  put: put
+  get,
+  put
 }

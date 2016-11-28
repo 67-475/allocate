@@ -1,4 +1,5 @@
-$(function() {
+/* eslint no-undef: 0 */
+$(() => {
   if (typeof settings !== 'undefined') {
     var bestTime = settings.bestTime
     var sleepTime = settings.sleepTimes[0]
@@ -21,12 +22,10 @@ $(function() {
     // format wake time form
     var formattedWakeTime = wakeTime.substr(0, 2) + ":" + wakeTime.substr(2)
     $("#wakeTime").val(formattedWakeTime)
-  } else {
-    console.log('undefined settings')
   }
 })
 
-var submitForm = function() {
+function submitForm() {
   postStatus.className = 'fa fa-spin fa-refresh fa-3x fa-fw'
   var bestTime = $("#workTimePreference").val()
   var sleepTime = $("#sleepTime").val()
@@ -47,10 +46,10 @@ var submitForm = function() {
     url: "/settings",
     method: 'POST',
     data: data,
-    success: function(data) {
+    success: (data) => {
       postStatus.className = 'fa fa-check'
     },
-    error: function(err) {
+    error: (err) => {
       console.log(err)
       postStatus.className = 'fa fa-times'
     }

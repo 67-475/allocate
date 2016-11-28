@@ -19,7 +19,9 @@ const rules = [ 'semi',
   'camelcase',
   'object-shorthand',
   'no-var',
-  'vars-on-top'
+  'vars-on-top',
+  'no-plusplus',
+  'no-mixed-operators'
  ]
 
 rules.forEach((rule) => {

@@ -41,7 +41,7 @@ buster.addSchema(schema, '/event')
  * @param  {Object} obj a settings object
  * @return {Boolean} results Errors generated in validating the object
  */
- exports.check = (obj) => {
+function check(obj) {
   const result = buster.validate(obj, schema)
   result.errors.forEach((error) => {
     if(process.env.NODE_ENV == 'test') {
@@ -49,4 +49,8 @@ buster.addSchema(schema, '/event')
     }
   })
   return result.errors
+}
+
+module.exports = {
+  check
 }
