@@ -72,6 +72,7 @@ function postProject(oauth2Client, projectData, res) {
 
     const errors = model.check(project)
     if (errors.length !== 0) {
+      console.log(errors)
       res.status(400).send(errors)
     } else {
       divvy(project, oauth2Client, (allocatedEvents) => {

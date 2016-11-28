@@ -37,6 +37,7 @@ function fetchUserDefaultSettings() {
 }
 
 function submitTaskForm() {
+  postStatus.className = 'fa fa-spin fa-refresh fa-3x fa-fw'
   var eventTitle = $('#eventTitle').val()
   var estimatedHours = $('#estimatedHours').val()
   var dueDate = $('#dueDate').val()
@@ -53,15 +54,18 @@ function submitTaskForm() {
     wakeTime: wakeTime
   }
 
+  console.log(data)
+
   $.ajax({
     url: '/allocate',
     type: 'POST',
     data: data,
-    success: function(response) {
-      console.log(response)
+    success: () => {
+      postStatus.className = 'fa fa-check'
     },
-    error: function(response) {
-      console.log(response)
+    error: (err) => {
+      console.error(err)
+      postStatus.className = 'fa fa-times'
     }
   })
 }

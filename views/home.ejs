@@ -6,6 +6,12 @@
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+        <script src="https://use.fontawesome.com/f8ebc31515.js"></script>
+        <style>
+          #postStatus { font-size: 16px; }
+          .fa-check { color: green }
+          .fa-times { color: red }
+        </style>
 
         <script type="text/javascript">
             var email = <%- JSON.stringify(email) %>
@@ -25,18 +31,18 @@
             </span>
         </nav>
         <br/>
-        <form class="row" method="post" action="/allocate">
+        <form class="row">
             <div class="form-group col-sm-8 offset-sm-2">
               <label for="eventTitle" class="col-xs-4 col-form-label">Event Title:</label>
               <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="German homework..." name="eventTitle" onfocus="showFormExtras()" onblur="toggleFormExtras()">
+                <input class="form-control" type="text" placeholder="German homework..." name="eventTitle" onfocus="showFormExtras()" onblur="toggleFormExtras()" id = "eventTitle">
               </div>
             </div>
             <div id="formExtras" style="display: none;">
               <div class="form-group col-sm-8 offset-sm-2">
                 <label for="estimatedHours" class="col-xs-4 col-form-label">Estimated Hours:</label>
                 <div class="col-xs-8">
-                  <input class="form-control" type="number" placeholder="12" name="estimatedHours">
+                  <input class="form-control" type="number" placeholder="12" name="estimatedHours" id = "estimatedHours">
                 </div>
               </div>
               <div class="form-group col-sm-8 offset-sm-2">
@@ -68,7 +74,12 @@
                   <input class="form-control" type="time" value="08:00:00" id = "wakeTime" name="wakeTime">
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary offset-sm-3 col-sm-6">Allocate Task</button>
+              <div class="form-group col-sm-8 offset-sm-2">
+                <button type="button" class="btn btn-primary" onclick="submitTaskForm()">
+                  Allocate Task
+                </button>
+                <i id='postStatus'></i>
+              </div>
             </div>
         </form>
 
