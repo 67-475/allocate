@@ -13,6 +13,10 @@
           .fa-times { color: red }
         </style>
 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.css">
+
         <script type="text/javascript">
             var email = <%- JSON.stringify(email) %>
             var calendars = <%- JSON.stringify(calendars) %>
@@ -93,6 +97,8 @@
             </div>
         </form>
 
+        <button type="button" class="btn btn-primary offset-sm-3 col-sm-6" onclick="showSampleProposalScreen()">Show Sample Proposal Screen</button>
+
         <div class="modal fade" id="proposalModal">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -104,6 +110,10 @@
               </div>
               <div class="modal-body">
                 <p>Hey! Here's our proposed schdule for you to complete your task in time</p>
+              </div>
+              <div id="proposed-events">
+              </div>
+              <div id="calendar">
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>

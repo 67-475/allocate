@@ -95,6 +95,49 @@ function submitTaskForm() {
         }
     })
 }
+
+function showSampleProposalScreen() {
+    var sampleAllocatedEvents = [
+        {
+            start: Date(Date.now() + 10000),
+            end: Date(Date.now() + 20000),
+            summary: "Allocated Event 1"
+        },
+        {
+            start: Date(Date.now() + 100000),
+            end: Date(Date.now() + 200000),
+            summary: "Allocated Event 2"
+        },
+        {
+            start: Date(Date.now() + 1000000),
+            end: Date(Date.now() + 2000000),
+            summary: "Allocated Event 3"
+        }
+    ]
+    $("#proposalModal").modal()
+    var proposedEvents = $("#proposed-events")
+    var fcEvents = []
+    for (var i = 0; i < sampleAllocatedEvents.length; i++) {
+        addEventToProposal(proposedEvents, sampleAllocatedEvents[i])
+        fcEvents.push(convertToFCEvent(sampleAllocatedEvents[i]))
+    };
+    $("#calendar").fullCalendar({
+        events: fcEvents
+    })
+}
+
+function addEventToProposal(proposal, event) {
+    proposal.append("<p>" + event.summary + "</p>")
+}
+
+function convertToFCEvent(event) {
+    return {
+        title: event.summary,
+        start: event.start,
+        end: event.start
+    }
+}
+
 function showFormExtras() {
   $('#formExtras').show()
 }
