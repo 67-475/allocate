@@ -58,7 +58,9 @@ function doesNotOverlap(allocatedEvent, calendarEvent) {
   const calEnd = new Date(calendarEvent.end.dateTime).getTime()
 
   const overlaps = (calStart < allocatedEvent.start) && (allocatedEvent.start < calEnd) ||
-                   (calStart < allocatedEvent.end) && (allocatedEvent.end < calEnd)
+                   (calStart < allocatedEvent.end) && (allocatedEvent.end < calEnd) ||
+                   (allocatedEvent.start < calStart) && (calStart < allocatedEvent.end) ||
+                   (allocatedEvent.end < calEnd) && (calEnd < allocatedEvent.end)
   return !overlaps
 }
 
