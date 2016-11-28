@@ -11,15 +11,14 @@ var calendar = google.calendar('v3')
  * @param {Date} event.end End time for event
  * @param {string} event.summary Summary text for event
  * @param {function} callback function to be called after API call is made
- * @param {String} calendarId Calendar on which to put this event, defaults to primary
  */
-function persistEvent(oauth2Client, event, callback, calendarId = 'primary') {
+function persistEvent(oauth2Client, event, callback) {
   const start = (new Date(event.start)).toISOString()
   const end = (new Date(event.end)).toISOString()
 
   calendar.events.insert({
     auth: oauth2Client,
-    calendarId: calendarId,
+    calendarId: 'primary',
     resource: {
       start: { dateTime: start },
       end: { dateTime: end },

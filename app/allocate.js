@@ -21,7 +21,7 @@ function divvy(project, oauth2Client, callback) {
     }
     var before = []
     const days = Math.floor((project.end - project.start) / ONE_DAY) + 2
-    var length = Math.floor(project.hours / days)
+    var length = project.hours / days
     // now will allocate a slot each day over the course of days days
     for (var i = 0; i < days; i++) {
       before.push(events.createAllocatedEvent(project.start, length, project.summary, i))

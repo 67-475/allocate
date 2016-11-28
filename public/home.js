@@ -44,6 +44,7 @@ function submitTaskForm() {
   var bestTime = $('#workTimePreference').val()
   var sleepTime = $('#sleepTime').val()
   var wakeTime = $('#wakeTime').val()
+  var calendar = $('#calendar').val()
 
   var data = {
     eventTitle: eventTitle,
@@ -51,7 +52,8 @@ function submitTaskForm() {
     dueDate: dueDate,
     bestTime: bestTime,
     sleepTime: sleepTime,
-    wakeTime: wakeTime
+    wakeTime: wakeTime,
+    calendar: calendar
   }
 
   console.log(data)
