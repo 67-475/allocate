@@ -14,8 +14,8 @@ var calendar = google.calendar('v3')
  * @param {String} calendarId Calendar on which to put this event, defaults to primary
  */
 function persistEvent(oauth2Client, event, callback, calendarId = 'primary') {
-  const start = event.start.toISOString()
-  const end = event.end.toISOString()
+  const start = (new Date(event.start)).toISOString()
+  const end = (new Date(event.end)).toISOString()
 
   calendar.events.insert({
     auth: oauth2Client,
@@ -25,12 +25,8 @@ function persistEvent(oauth2Client, event, callback, calendarId = 'primary') {
       end: { dateTime: end },
       summary: event.summary
     }
-  }, (err, response) => {
-    if (err) {
-      console.error(err.stack)
-    } else {
-      callback(response)
-    }
+  }, (err) => {
+    callback(err)
   })
 }
 
@@ -57,9 +53,13 @@ function createAllocatedEvent(start, length, summary, daysAfter) {
  * @param  {Object} calendarEvent
  * @return {boolean} result
  */
-function doesOverlap(allocatedEvent, calendarEvent) {
-  console.log(allocatedEvent, calendarEvent)
-  return false
+function doesNotOverlap(allocatedEvent, calendarEvent) {
+  const calStart = new Date(calendarEvent.start.dateTime).getTime()
+  const calEnd = new Date(calendarEvent.end.dateTime).getTime()
+
+  const overlaps = (calStart < allocatedEvent.start) && (allocatedEvent.start < calEnd) ||
+                   (calStart < allocatedEvent.end) && (allocatedEvent.end < calEnd)
+  return !overlaps
 }
 
 /**
@@ -97,13 +97,14 @@ function getEvents (project, oauth2Client, callback) {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, response.items)
+      callback(null, response.items)
     }
   })
 }
 
 module.exports = {
   getEvents,
-  doesOverlap,
-  createAllocatedEvent
+  doesNotOverlap,
+  createAllocatedEvent,
+  persistEvent
 }

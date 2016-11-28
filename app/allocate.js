@@ -33,7 +33,7 @@ function divvy(project, oauth2Client, callback) {
 
       async.whilst(() => doesNotOverlap, (finishedWithLoop) => {
         async.reduce(calendarEvents, true, (prev, cur, next) => {
-          next(null, prev && events.doesNotOverlap(cur, event))
+          next(null, prev && events.doesNotOverlap(event, cur))
         }, (err, result) => {
           if(!result) { // if it overlaps with something
             event.start = event.start + FIFTEEN_MINUTES
@@ -83,14 +83,16 @@ function postProject(oauth2Client, projectData, res) {
         }, (err) => {
           if(err) {
             console.log(err.stack)
+            res.sendStatus(500)
+          } else {
+            res.sendStatus(201)
           }
-          res.status(err ? 201 : 500)
         })
       })
     }
   } catch (err) {
     console.error(err)
-    res.status(500)
+    res.sendStatus(500)
   }
 }
 
