@@ -1,4 +1,4 @@
-/* eslint no-console:0, block-scoped-var:0, no-loop-func:0 */
+/* eslint no-console:0, block-scoped-var:0, no-loop-func:0, no-param-reassign:0 */
 var model = require('../models/event')
 var events = require('./events')
 var async = require('async')
@@ -35,18 +35,18 @@ function divvy(project, oauth2Client, callback) {
         async.reduce(calendarEvents, true, (prev, cur, next) => {
           next(null, prev && events.doesNotOverlap(event, cur))
         }, (err, result) => {
-          if(!result) { // if it overlaps with something
-            event.start = event.start + FIFTEEN_MINUTES
-            event.end = event.end + FIFTEEN_MINUTES
+          if (!result) { // if it overlaps with something
+            event.start += FIFTEEN_MINUTES
+            event.end += FIFTEEN_MINUTES
             attempts += 1
-            if(attempts > 96) { callback([]) } // could not allocate before next day
+            if (attempts > 96) { callback([]) } // could not allocate before next day
           } else {
             doesNotOverlap = false
           }
           finishedWithLoop()
         }) // async.reduce
-      }, (err, n) => { allocatedEvents.push(event); done() }) // async.whilst
-    }, (err) => { callback(allocatedEvents) }) // async.each
+      }, () => { allocatedEvents.push(event); done() }) // async.whilst
+    }, () => { callback(allocatedEvents) }) // async.each
   }) // events.getEvents
 }
 
@@ -75,13 +75,12 @@ function postProject(oauth2Client, projectData, res) {
       res.status(400).send(errors)
     } else {
       divvy(project, oauth2Client, (allocatedEvents) => {
-        const result = allocatedEvents.length > 0
         async.each(allocatedEvents, (event, done) => {
-          events.persistEvent(oauth2Client, event, (err, response) => {
+          events.persistEvent(oauth2Client, event, (err) => {
             done(err)
           })
         }, (err) => {
-          if(err) {
+          if (err) {
             console.log(err.stack)
             res.sendStatus(500)
           } else {
