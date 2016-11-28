@@ -154,7 +154,6 @@ function getSettings(req, res) {
       console.error(err)
       res.status(304)
     } else {
-      console.log(results, results.bestTime, results.sleepTime)
       res.send(results)
     }
   })
