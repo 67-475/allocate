@@ -39,14 +39,14 @@ function divvy(project, oauth2Client, callback) {
             event.start += FIFTEEN_MINUTES
             event.end += FIFTEEN_MINUTES
             attempts += 1
-            if (attempts > 96) { callback([]) } // could not allocate before next day
+            if (attempts > 96) { callback('could not allocate') } // could not allocate before next day
           } else {
             doesNotOverlap = false
           }
           finishedWithLoop()
         }) // async.reduce
       }, () => { allocatedEvents.push(event); done() }) // async.whilst
-    }, () => { callback(allocatedEvents) }) // async.each
+    }, () => { callback(null, allocatedEvents) }) // async.each
   }) // events.getEvents
 }
 
@@ -75,19 +75,24 @@ function postProject(oauth2Client, projectData, res) {
       console.log(errors)
       res.status(400).send(errors)
     } else {
-      divvy(project, oauth2Client, (allocatedEvents) => {
-        async.each(allocatedEvents, (event, done) => {
-          events.persistEvent(oauth2Client, event, (err) => {
-            done(err)
+      divvy(project, oauth2Client, (err, allocatedEvents) => {
+        if(err) {
+          console.log(err)
+          res.sendStatus(500)
+        } else {
+          async.each(allocatedEvents, (event, done) => {
+            events.persistEvent(oauth2Client, event, (error) => {
+              done(error)
+            })
+          }, (err) => {
+            if (err) {
+              console.log(err.stack)
+              res.sendStatus(500)
+            } else {
+              res.sendStatus(201)
+            }
           })
-        }, (err) => {
-          if (err) {
-            console.log(err.stack)
-            res.sendStatus(500)
-          } else {
-            res.sendStatus(201)
-          }
-        })
+        }
       })
     }
   } catch (err) {
