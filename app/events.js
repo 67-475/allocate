@@ -103,29 +103,6 @@ function getEvents (project, oauth2Client, callback) {
   })
 }
 
-function getEventsUpTo (projectEnd, oauth2Client, calendarId, callback) {
-  calendar.events.list({
-    auth: oauth2Client,
-    calendarId: calendarId,
-    timeMin: (new Date()).toISOString(),
-    timeMax: projectEnd.toISOString(),
-    singleEvents: true,
-    orderBy: 'startTime',
-  }, (err, response) => {
-    if (err) {
-      // console.error('The API returned: ' + err)
-      callback(null)
-    } else {
-      var events = response.items
-      if (events.length === 0) {
-        callback(null)
-      } else {
-        callback(events)
-      }
-    }
-  })
-}
-
 module.exports = {
   getEvents,
   doesNotOverlap,
