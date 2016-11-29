@@ -11,15 +11,16 @@ describe('models/event.js', () => {
       start: new Date('' + (today.getFullYear()) + 1),
       end: new Date('' + (today.getFullYear()) + 2),
       summary: 'Download More RAM',
+      calendar: 'things I may or may not do'
     }
   })
 
   it('should validate a correct model object', () => {
-    assert.isTrue(event.check(buster).length == 0)
+    assert.equal(event.check(buster).length, 0)
   })
 
   it('should not let you start before you begin', () => {
     buster.start = new Date('' + (today.getFullYear()) + 3)
-    assert.isTrue(event.check(buster).length == 1)
+    assert.equal(event.check(buster).length, 1)
   })
 })
