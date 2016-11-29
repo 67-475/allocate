@@ -86,7 +86,7 @@ function postProject(email, oauth2Client, projectData, res) {
             console.log(err.stack)
             res.sendStatus(500)
           } else {
-            res.sendStatus(201)
+            res.status(201).send(allocatedEvents)
           }
         })
       })

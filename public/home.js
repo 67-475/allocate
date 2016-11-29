@@ -83,10 +83,7 @@ function submitTaskForm() {
       success: function(data) {
           console.log(data)
           postStatus.className = 'fa fa-check'
-          $("#proposalModal").on("show.bs.modal", function(e) {
-              $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
-          })
-          $("#proposalModal").modal()
+          showProposalScreen(data)
       },
       error: function(data) {
           console.log(data)
@@ -95,46 +92,28 @@ function submitTaskForm() {
   })
 }
 
-function showSampleProposalScreen() {
-    var sampleAllocatedEvents = [
-        {
-            start: Date(Date.now() + 10000),
-            end: Date(Date.now() + 20000),
-            summary: "Allocated Event 1"
-        },
-        {
-            start: Date(Date.now() + 100000),
-            end: Date(Date.now() + 200000),
-            summary: "Allocated Event 2"
-        },
-        {
-            start: Date(Date.now() + 1000000),
-            end: Date(Date.now() + 2000000),
-            summary: "Allocated Event 3"
-        }
-    ]
-    $("#proposalModal").modal()
-    var proposedEvents = $("#proposed-events")
-    var fcEvents = []
-    for (var i = 0; i < sampleAllocatedEvents.length; i++) {
-        addEventToProposal(proposedEvents, sampleAllocatedEvents[i])
-        fcEvents.push(convertToFCEvent(sampleAllocatedEvents[i]))
-    };
-    $("#calendar").fullCalendar({
-        events: fcEvents
-    })
-}
-
-function addEventToProposal(proposal, event) {
-    proposal.append("<p>" + event.summary + "</p>")
+function showProposalScreen(data) {
+  var fcEvents = []
+  for (var i = 0; i < data.length; i++) {
+    console.log(convertToFCEvent(data[i]))
+      fcEvents.push(convertToFCEvent(data[i]))
+  };
+  $("#proposalModal").on("show.bs.modal", function(e) {
+      $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
+  })
+  $("#proposalModal").modal()
+  $("#calendar").fullCalendar({
+      events: fcEvents
+  })
+  $("#calendar").fullCalendar('render')
 }
 
 function convertToFCEvent(event) {
-    return {
-        title: event.summary,
-        start: event.start,
-        end: event.start
-    }
+  return {
+      title: event.summary,
+      start: new Date(event.start),
+      end: new Date(event.end)
+  }
 }
 
 function showFormExtras() {
