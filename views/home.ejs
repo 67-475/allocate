@@ -97,8 +97,6 @@
             </div>
         </form>
 
-        <button type="button" class="btn btn-primary offset-sm-3 col-sm-6" onclick="showSampleProposalScreen()">Show Sample Proposal Screen</button>
-
         <div class="modal fade" id="proposalModal">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -123,13 +121,7 @@
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-
-
         <iframe src="https://calendar.google.com/calendar/embed?src=<%= email %>&ctz=America/New_York" style="border: 0; width: 100%; height: 600px" frameborder="0" scrolling="no"></iframe>
-        <script>
-          var events = <%- JSON.stringify(events) %>
-        </script>
-
     </body>
 
 </html>

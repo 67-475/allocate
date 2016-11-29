@@ -73,27 +73,25 @@ function submitTaskForm() {
     wakeTime: wakeTime,
     calendar: calendar
   }
-    
-  $("#proposalModal").modal()
 
-    console.log(data)
+  console.log(data)
 
-    $.ajax({
-        url: '/allocate',
-        type: 'POST',
-        data: data,
-        success: function(data) {
-            console.log(data)
-            $("#proposalModal").on("show.bs.modal", function(e) {
-                $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
-            })
-            $("#proposalModal").modal()
-        },
-        error: function(data) {
-            console.log(data)
-            postStatus.className = 'fa fa-times'
-        }
-    })
+  $.ajax({
+      url: '/allocate',
+      type: 'POST',
+      data: data,
+      success: function(data) {
+          console.log(data)
+          $("#proposalModal").on("show.bs.modal", function(e) {
+              $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
+          })
+          $("#proposalModal").modal()
+      },
+      error: function(data) {
+          console.log(data)
+          postStatus.className = 'fa fa-times'
+      }
+  })
 }
 
 function showSampleProposalScreen() {
@@ -199,7 +197,7 @@ $(() => {
     iFrameSourceString = iFrameSourceString + '&src=' + encodeURIComponent(cal.id) + '&color=%23' + colorsArray[colorsArrayIndex]
     colorsArrayIndex++
   };
-    var $iFrame = $("<iFrame>", {"id":"iFrame", "src": iFrameSourceString, 
+    var $iFrame = $("<iFrame>", {"id":"iFrame", "src": iFrameSourceString,
         "style": "border-width:0", "width": "100%", "height": "600px",
         "frameborder": "0", "scrolling": "no"})
 
