@@ -82,6 +82,7 @@ function submitTaskForm() {
       data: data,
       success: function(data) {
           console.log(data)
+          postStatus.className = 'fa fa-check'
           $("#proposalModal").on("show.bs.modal", function(e) {
               $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
           })
