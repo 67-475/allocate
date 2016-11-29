@@ -79,7 +79,7 @@ function postProject(email, oauth2Client, projectData, res) {
       start: new Date(new Date().getTime() + 5000), // start 5 seconds from now
       end: new Date(projectData.dueDate),
       summary: projectData.eventTitle,
-      hours: projectData.estimatedHours
+      hours: projectData.estimatedHours,
       calendar: projectData.calendar
     }
 

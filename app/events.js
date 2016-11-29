@@ -99,14 +99,6 @@ function getEvents (project, oauth2Client, callback) {
       callback(err)
     } else {
       callback(null, response.items)
-    } else {
-      var events = response.items
-      if (events.length === 0) {
-        // callback('No upcoming events')
-        callback(null)
-      } else {
-        callback(events)
-      }
     }
   })
 }
