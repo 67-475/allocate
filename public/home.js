@@ -88,8 +88,8 @@ function toggleFormExtras() {
 $(function() {
   fetchUserDefaultSettings()
 
-  // format due date default to tomorrow
-  var tomorrow = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
+  // format due date default to three days from now
+  var tomorrow = new Date(new Date().getTime() + (3 * 24 * 60 * 60 * 1000));
   var tomday = tomorrow.getDate();
   var tommonth = tomorrow.getMonth() + 1;
   var tomyear = tomorrow.getFullYear();

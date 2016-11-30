@@ -63,8 +63,9 @@ function postProject(oauth2Client, projectData, res) {
   try {
     // want to start project at the next given preferred time
 
+    const dummy = new Date()
     project = {
-      start: new Date(new Date().getTime() + 5000), // start 5 seconds from now
+      start: new Date(dummy.getTime()),
       end: new Date(projectData.dueDate),
       summary: projectData.eventTitle,
       hours: projectData.estimatedHours
