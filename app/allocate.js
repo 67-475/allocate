@@ -76,9 +76,9 @@ function postProject(oauth2Client, projectData, res) {
       console.log(errors)
       res.status(400).send(errors)
     } else {
-      divvy(project, oauth2Client, (err, allocatedEvents) => {
-        if(err) {
-          console.log(err)
+      divvy(project, oauth2Client, (divvyErr, allocatedEvents) => {
+        if (divvyErr) {
+          console.log(divvyErr)
           res.sendStatus(500)
         } else {
           async.each(allocatedEvents, (event, done) => {
