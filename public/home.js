@@ -64,6 +64,7 @@ function submitTaskForm() {
     data: data,
     success: () => {
       postStatus.className = 'fa fa-check'
+      setTimeout(() => { location.reload() }, 1000)
     },
     error: (err) => {
       console.error(err)
