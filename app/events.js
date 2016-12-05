@@ -87,11 +87,14 @@ function formatDate (date) {
   * @param {function} callback function to be called with results of API call
   */
 function getEvents (project, oauth2Client, callback) {
+  // pull events from the full most recent day so we don't allocate during
+  // currently ongoing events
+  const tempStart = new Date(project.start.getTime() - ONE_DAY)
   calendar.events.list({
     auth: oauth2Client,
     calendarId: 'primary',
     timeMax: formatDate(project.end),
-    timeMin: formatDate(project.start),
+    timeMin: formatDate(tempStart),
     fields: "items(end/dateTime,start/dateTime,summary)",
     singleEvents: true
   }, (err, response) => {
