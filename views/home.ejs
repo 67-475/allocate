@@ -1,6 +1,6 @@
 <html>
     <head>
-        <meta http-equiv="X-Frame-Options" content="allow">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
@@ -23,65 +23,74 @@
     <body>
 
         <nav class="navbar navbar-light bg-faded">
-            <a class="navbar-brand" href="#"><%= email %></a>
-            <span class="navbar-text float-xs-right text-muted">
-              <a class="btn btn-primary" href='/' role="button">Home</a>
-              <a class="btn btn-primary" href='/settings' role="button">Settings</a>
-              <a class="btn btn-primary" href='/logout' role="button">Logout</a>
-            </span>
+          <a class="navbar-brand" href="#"><%= email %></a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item dropdown float-xs-right">
+              <a class="nav-link dropdown-toggle" href="http://example.com" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="supportedContentDropdown">
+                <a class="dropdown-item" href='/settings'>Settings</a>
+                <a class="dropdown-item" href='/logout'>Logout</a>
+              </div>
+            </li>
+          </ul>
         </nav>
+
+
+
         <br/>
-        <form class="row">
-            <div class="form-group col-sm-8 offset-sm-2">
-              <label for="eventTitle" class="col-xs-4 col-form-label">Event Title:</label>
-              <div class="col-xs-8">
-                <input class="form-control" type="text" placeholder="German homework..." name="eventTitle" onfocus="showFormExtras()" onblur="toggleFormExtras()" id = "eventTitle">
-              </div>
-            </div>
-            <div id="formExtras" style="display: none;">
+        <div class='container'>
+          <form class="row">
               <div class="form-group col-sm-8 offset-sm-2">
-                <label for="estimatedHours" class="col-xs-4 col-form-label">Estimated Hours:</label>
+                <label for="eventTitle" class="col-xs-4 col-form-label">Event Title:</label>
                 <div class="col-xs-8">
-                  <input class="form-control" type="number" placeholder="12" name="estimatedHours" id = "estimatedHours">
+                  <input class="form-control" type="text" placeholder="German homework..." name="eventTitle" onfocus="showFormExtras()" onblur="toggleFormExtras()" id = "eventTitle">
                 </div>
               </div>
-              <div class="form-group col-sm-8 offset-sm-2">
-                <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
-                <div class="col-xs-8">
-                  <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id = "dueDate" name="dueDate">
+              <div id="formExtras" style="display: none;">
+                <div class="form-group col-sm-8 offset-sm-2">
+                  <label for="estimatedHours" class="col-xs-4 col-form-label">Estimated Hours:</label>
+                  <div class="col-xs-8">
+                    <input class="form-control" type="number" placeholder="12" name="estimatedHours" id = "estimatedHours">
+                  </div>
+                </div>
+                <div class="form-group col-sm-8 offset-sm-2">
+                  <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Due Date:</label>
+                  <div class="col-xs-8">
+                    <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id = "dueDate" name="dueDate">
+                  </div>
+                </div>
+                <div class="form-group col-sm-8 offset-sm-2">
+                  <label for="workTimePreference" class="col-xs-4 col-form-label">Work Time Preference:</label>
+                  <div class="col-xs-8">
+                    <select class="form-control" name="workTimePreference" id="workTimePreference">
+                      <option value="m">Morning</option>
+                      <option value="a">Afternoon</option>
+                      <option value="e">Evening</option>
+                      <option value="n">Night</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group col-sm-8 offset-sm-2">
+                  <label for="sleepTime" class="col-xs-4 col-form-label">Sleep Time:</label>
+                  <div class="col-xs-8">
+                    <input class="form-control" type="time" value="22:30:00" id = "sleepTime" name="sleepTime">
+                  </div>
+                </div>
+                <div class="form-group col-sm-8 offset-sm-2">
+                  <label for="wakeTime" class="col-xs-4 col-form-label">Wake Time:</label>
+                  <div class="col-xs-8">
+                    <input class="form-control" type="time" value="08:00:00" id = "wakeTime" name="wakeTime">
+                  </div>
+                </div>
+                <div class="form-group col-sm-8 offset-sm-2">
+                  <button type="button" class="btn btn-primary" onclick="submitTaskForm()">
+                    Allocate Task
+                  </button>
+                  <i id='postStatus'></i>
                 </div>
               </div>
-              <div class="form-group col-sm-8 offset-sm-2">
-                <label for="workTimePreference" class="col-xs-4 col-form-label">Work Time Preference:</label>
-                <div class="col-xs-8">
-                  <select class="form-control" name="workTimePreference" id="workTimePreference">
-                    <option value="m">Morning</option>
-                    <option value="a">Afternoon</option>
-                    <option value="e">Evening</option>
-                    <option value="n">Night</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group col-sm-8 offset-sm-2">
-                <label for="sleepTime" class="col-xs-4 col-form-label">Sleep Time:</label>
-                <div class="col-xs-8">
-                  <input class="form-control" type="time" value="22:30:00" id = "sleepTime" name="sleepTime">
-                </div>
-              </div>
-              <div class="form-group col-sm-8 offset-sm-2">
-                <label for="wakeTime" class="col-xs-4 col-form-label">Wake Time:</label>
-                <div class="col-xs-8">
-                  <input class="form-control" type="time" value="08:00:00" id = "wakeTime" name="wakeTime">
-                </div>
-              </div>
-              <div class="form-group col-sm-8 offset-sm-2">
-                <button type="button" class="btn btn-primary" onclick="submitTaskForm()">
-                  Allocate Task
-                </button>
-                <i id='postStatus'></i>
-              </div>
-            </div>
-        </form>
+          </form>
+        </div>
 
         <div id="iFrameDiv">
           <!-- <iframe src="https://calendar.google.com/calendar/embed?src=<%= email %>&ctz=America/New_York" style="border: 0; width: 100%; height: 600px" frameborder="0" scrolling="no"></iframe> -->
