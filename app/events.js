@@ -16,7 +16,7 @@ function persistEvent(oauth2Client, event, callback) {
   const start = (new Date(event.start)).toISOString()
   const end = (new Date(event.end)).toISOString()
 
-  if(process.argv[2] !== "no-push") {
+  if (process.argv[2] !== "no-push") {
     calendar.events.insert({
       auth: oauth2Client,
       calendarId: 'primary',

@@ -24,12 +24,12 @@ const adjustments = {
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, email, oauth2Client, callback) {
-  db.get(email, (err, userSettings) => {
+  db.get(email, (dbErr, userSettings) => {
     // make adjustments to when we want to start depending on user's settings
-    var proposedStart = moment(userSettings.sleepTimes[1], ['hmm','hhmm'])
+    var proposedStart = moment(userSettings.sleepTimes[1], ['hmm', 'hhmm'])
                               .add(adjustments[userSettings.bestTime], 'hours')
                               .add(moment().isDST() ? 1 : 0, 'hours')
-    if(proposedStart < moment()) { // if we are starting in the past
+    if (proposedStart < moment()) { // if we are starting in the past
       proposedStart = proposedStart.add(24, 'hours')
       project.start = proposedStart.toDate()
     }
