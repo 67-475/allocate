@@ -1,6 +1,7 @@
 /* eslint no-console:0, block-scoped-var:0, no-loop-func:0, no-param-reassign:0 */
 var model = require('../models/event')
 var events = require('./events')
+var db = require('../models/database')
 var async = require('async')
 const ONE_DAY = 1000 * 60 * 60 * 24
 const FIFTEEN_MINUTES = 1000 * 60 * 15
@@ -13,41 +14,43 @@ const FIFTEEN_MINUTES = 1000 * 60 * 15
                                 with which to make API call
  * @param {function} callback callback to be called when project is allocated
  */
-function divvy(project, oauth2Client, callback) {
-  events.getEvents(project, oauth2Client, (error, calendarEvents) => {
-    if (error) {
-      console.error(error)
-      callback(false)
-    }
-    var before = []
-    const days = Math.floor((project.end - project.start) / ONE_DAY) + 2
-    var length = project.hours / days
-    // now will allocate a slot each day over the course of days days
-    for (var i = 0; i < days; i++) {
-      before.push(events.createAllocatedEvent(project.start, length, project.summary, i))
-    }
-    var allocatedEvents = []
-    async.each(before, (event, done) => {
-      var doesNotOverlap = true
-      var attempts = 0
+function divvy(project, email, oauth2Client, callback) {
+  db.get(email, (err, userSettings) => {
+    events.getEvents(project, oauth2Client, (error, calendarEvents) => {
+      if (error) {
+        console.error(error)
+        callback(false)
+      }
+      var before = []
+      const days = Math.floor((project.end - project.start) / ONE_DAY) + 2
+      var length = project.hours / days
+      // now will allocate a slot each day over the course of days days
+      for (var i = 0; i < days; i++) {
+        before.push(events.createAllocatedEvent(project.start, length, project.summary, i))
+      }
+      var allocatedEvents = []
+      async.each(before, (event, done) => {
+        var doesNotOverlap = true
+        var attempts = 0
 
-      async.whilst(() => doesNotOverlap, (finishedWithLoop) => {
-        async.reduce(calendarEvents, true, (prev, cur, next) => {
-          next(null, prev && events.doesNotOverlap(event, cur))
-        }, (err, result) => {
-          if (!result) { // if it overlaps with something
-            event.start += FIFTEEN_MINUTES
-            event.end += FIFTEEN_MINUTES
-            attempts += 1
-            if (attempts > 96) { callback('could not allocate') } // could not allocate before next day
-          } else {
-            doesNotOverlap = false
-          }
-          finishedWithLoop()
-        }) // async.reduce
-      }, () => { allocatedEvents.push(event); done() }) // async.whilst
-    }, () => { callback(null, allocatedEvents) }) // async.each
-  }) // events.getEvents
+        async.whilst(() => doesNotOverlap, (finishedWithLoop) => {
+          async.reduce(calendarEvents, true, (prev, cur, next) => {
+            next(null, prev && events.doesNotOverlap(event, cur))
+          }, (err, result) => {
+            if (!result) { // if it overlaps with something
+              event.start += FIFTEEN_MINUTES
+              event.end += FIFTEEN_MINUTES
+              attempts += 1
+              if (attempts > 96) { callback('could not allocate') } // could not allocate before next day
+            } else {
+              doesNotOverlap = false
+            }
+            finishedWithLoop()
+          }) // async.reduce
+        }, () => { allocatedEvents.push(event); done() }) // async.whilst
+      }, () => { callback(null, allocatedEvents) }) // async.each
+    }) // events.getEvents
+  }) // db.get
 }
 
 /**
@@ -58,7 +61,7 @@ function divvy(project, oauth2Client, callback) {
  * @param {Object} projectData description of project
  * @param {Object} res express.js response
  */
-function postProject(oauth2Client, projectData, res) {
+function postProject(oauth2Client, email, projectData, res) {
   var project = {}
   try {
     // want to start project at the next given preferred time
@@ -76,7 +79,7 @@ function postProject(oauth2Client, projectData, res) {
       console.log(errors)
       res.status(400).send(errors)
     } else {
-      divvy(project, oauth2Client, (divvyErr, allocatedEvents) => {
+      divvy(project, email, oauth2Client, (divvyErr, allocatedEvents) => {
         if (divvyErr) {
           console.log(divvyErr)
           res.sendStatus(500)

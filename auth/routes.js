@@ -186,7 +186,7 @@ const allocate = require('../app/allocate')
 function postProject(req, res) {
   const email = scrambler.decrypt(req.cookies.auth)
   const client = oauth2Clients[email]
-  allocate(client, req.body, res)
+  allocate(client, email, req.body, res)
 }
 
 exports.init = (app) => {
