@@ -15,7 +15,7 @@ const FIFTEEN_MINUTES = 1000 * 60 * 15
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, email, oauth2Client, callback) {
-  db.get(email, (err, userSettings) => {
+  db.getPreferredTimes(email, (err, userSettings) => {
     events.getEvents(project, oauth2Client, (error, calendarEvents) => {
       if (error) {
         console.error(error)

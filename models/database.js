@@ -6,6 +6,14 @@ function get(email, callback) {
   levelupDB.get(email, (err, result) => { callback(err, result) })
 }
 
+function getPreferredTimes(email, callback) {
+  levelupDB.get(email, (err, results) => {
+    const preferredTimes = settings.getPreferredTimes(results)
+
+    callback(err, preferredTimes)
+  })
+}
+
 function put(email, userSettings, callback) {
   const errors = settings.check(userSettings)
   if(errors.length == 0) {
@@ -17,5 +25,6 @@ function put(email, userSettings, callback) {
 
 module.exports = {
   get,
-  put
+  put,
+  getPreferredTimes
 }
