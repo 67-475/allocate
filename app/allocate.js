@@ -83,40 +83,49 @@ function postProject(oauth2Client, email, projectData, res) {
   try {
     // want to start project at the next given preferred time
 
-    const dummy = new Date()
-    project = {
-      start: new Date(dummy.getTime()),
-      end: new Date(projectData.dueDate),
-      summary: projectData.eventTitle,
-      hours: projectData.estimatedHours
+    const newSettings = {
+      bestTime: projectData.bestTime,
+      sleepTimes: [
+        moment(projectData.sleepTime, 'hh:mm:ss').format('hhmm'),
+        moment(projectData.wakeTime, 'hh:mm:ss').format('hhmm'),
+      ]
     }
+    db.put(email, newSettings, () => {
+      const dummy = new Date()
+      project = {
+        start: new Date(dummy.getTime()),
+        end: new Date(projectData.dueDate),
+        summary: projectData.eventTitle,
+        hours: projectData.estimatedHours
+      }
 
-    const errors = model.check(project)
-    if (errors.length !== 0) {
-      console.log(errors)
-      res.status(400).send(errors)
-    } else {
-      divvy(project, email, oauth2Client, (divvyErr, allocatedEvents) => {
-        if (divvyErr) {
-          console.log(divvyErr)
-          res.sendStatus(500)
-        } else {
-          async.each(allocatedEvents, (event, done) => {
-            events.persistEvent(oauth2Client, event, (error) => {
-              done(error)
-            })
-          }, (err) => {
-            if (err) {
-              console.log(err.stack)
-              res.sendStatus(500)
-            } else {
-              res.sendStatus(201)
-            }
-          })
-        }
-      })
-    }
-  } catch (err) {
+      const errors = model.check(project)
+      if (errors.length !== 0) {
+        console.log(errors)
+        res.status(400).send(errors)
+      } else {
+        divvy(project, email, oauth2Client, (divvyErr, allocatedEvents) => {
+          if (divvyErr) {
+            console.log(divvyErr)
+            res.sendStatus(500)
+          } else {
+            async.each(allocatedEvents, (event, done) => {
+              events.persistEvent(oauth2Client, event, (error) => {
+                done(error)
+              })
+            }, (err) => {
+              if (err) {
+                console.log(err.stack)
+                res.sendStatus(500)
+              } else {
+                res.sendStatus(201)
+              } // checking for async.each errors
+            }) // async.each
+          } // checking for divvy errors
+        }) // divvy
+      } // checking for invalid proects
+    }) // db.put for settings
+  } catch (err) { // giant try/catch
     console.error(err)
     res.sendStatus(500)
   }
