@@ -100,10 +100,10 @@ function postProject(email, oauth2Client, projectData, res) {
             } else {
               res.status(201).send(allocatedEvents)
             }
-          })
-        }
-      })
-    }
+          }) // closes async.each
+        } // closes else
+      }) // closees divvy
+    } // closes else
   } catch (err) {
     console.error(err)
     res.sendStatus(500)
