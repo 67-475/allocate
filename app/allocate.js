@@ -2,9 +2,18 @@
 var model = require('../models/event')
 var events = require('./events')
 var db = require('../models/database')
+
+var moment = require('moment')
 var async = require('async')
+
 const ONE_DAY = 1000 * 60 * 60 * 24
 const FIFTEEN_MINUTES = 1000 * 60 * 15
+const adjustments = {
+  m: 0,
+  a: 4,
+  e: 8,
+  n: 12
+}
 
 /**
  * Actually divide up project into events based on a given email's calendar
@@ -15,7 +24,15 @@ const FIFTEEN_MINUTES = 1000 * 60 * 15
  * @param {function} callback callback to be called when project is allocated
  */
 function divvy(project, email, oauth2Client, callback) {
-  db.getPreferredTimes(email, (err, userSettings) => {
+  db.get(email, (err, userSettings) => {
+    // make adjustments to when we want to start depending on user's settings
+    var proposedStart = moment(userSettings.sleepTimes[1], ['hmm','hhmm'])
+                              .add(adjustments[userSettings.bestTime], 'hours')
+                              .add(moment().isDST() ? 1 : 0, 'hours')
+    if(proposedStart < moment()) { // if we are starting in the past
+      proposedStart = proposedStart.add(24, 'hours')
+      project.start = proposedStart.toDate()
+    }
     events.getEvents(project, oauth2Client, (error, calendarEvents) => {
       if (error) {
         console.error(error)
