@@ -67,16 +67,6 @@
                 </div>
               </div>
               <div class="form-group col-sm-8 offset-sm-2">
-                <label for="calendar" class="col-xs-4 col-form-label">Calendar:</label>
-                <div class="col-xs-8">
-                  <select class="form-control">
-                    <% for(var i=0; i<calendars.length; i++) {%>
-                      <option value="<%= calendars[i].id %>"><%= calendars[i].summary %></option>
-                    <% } %>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group col-sm-8 offset-sm-2">
                 <label for="sleepTime" class="col-xs-4 col-form-label">Sleep Time:</label>
                 <div class="col-xs-8">
                   <input class="form-control" type="time" value="22:30:00" id = "sleepTime" name="sleepTime">
