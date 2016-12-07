@@ -14,6 +14,7 @@ const adjustments = {
   e: 8,
   n: 12
 }
+const env = process.env.NODE_ENV || 'development'
 
 /**
  * Actually divide up project into events based on a given email's calendar
@@ -29,7 +30,8 @@ function divvy(project, email, oauth2Client, callback) {
     var proposedStart = moment(userSettings.sleepTimes[1], ['hmm', 'hhmm'])
                               .add(adjustments[userSettings.bestTime], 'hours')
                               .add(moment().isDST() ? 1 : 0, 'hours')
-                              .add(moment().utcOffset(), 'minutes')
+    proposedStart = (env === 'development') ? proposedStart : proposedStart.add(moment().utcOffset(), 'minutes')
+
     if (proposedStart < moment()) { // if we are starting in the past
       proposedStart = proposedStart.add(24, 'hours')
       project.start = proposedStart.toDate()
