@@ -93,15 +93,15 @@ function postProject(email, oauth2Client, projectData, res) {
             } else {
               res.sendStatus(201)
             }
+          }, (err) => {
+            if (err) {
+              console.log(err.stack)
+              res.sendStatus(500)
+            } else {
+              res.status(201).send(allocatedEvents)
+            }
           })
-        }, (err) => {
-          if (err) {
-            console.log(err.stack)
-            res.sendStatus(500)
-          } else {
-            res.status(201).send(allocatedEvents)
-          }
-        })
+        }
       })
     }
   } catch (err) {
