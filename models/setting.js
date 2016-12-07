@@ -60,18 +60,3 @@ buster.addSchema(schema, '/settings')
   })
   return result.errors
 }
-
-/**
- * Return a descriptor of morning, afternoon, evening, and night
- * based on a give user settings.
- *
- * These are very crude, but we essentially partition your waking
- * hours into 4 slots depending on when the user has specified
- * that they wake up. If nothing is specified, we will assume the default
- * sleep time of 12:00am to 8:00am.
- * @param  {Object} settings of the user
- * @return {Object} prefferedTimes
- */
-exports.getPreferredTimes = (settings) => {
-  return settings
-}
