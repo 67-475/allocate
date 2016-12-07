@@ -74,8 +74,6 @@ function submitTaskForm() {
     calendar: calendar
   }
 
-  console.log(data)
-
   $.ajax({
       url: '/allocate',
       type: 'POST',
@@ -93,18 +91,18 @@ function submitTaskForm() {
 }
 
 function showProposalScreen(data) {
-  var fcEvents = []
-  for (var i = 0; i < data.length; i++) {
-    console.log(convertToFCEvent(data[i]))
-      fcEvents.push(convertToFCEvent(data[i]))
-  };
   $("#proposalModal").on("show.bs.modal", function(e) {
-      $(this).find('.modal-title').text("Proposed Schedule: " + data.eventTitle)
+      $(this).find('.modal-title').text("Proposed Schedule")
+      var fcEvents = []
+      for (var i = 0; i < data.length; i++) {
+        fcEvents.push(convertToFCEvent(data[i]))
+      }
+      $("#calendar").fullCalendar({
+        events: fcEvents
+      })
+      $("#calendar").fullCalendar('render')
   })
   $("#proposalModal").modal()
-  $("#calendar").fullCalendar({
-      events: fcEvents
-  })
   $("#calendar").fullCalendar('render')
 }
 
