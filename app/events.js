@@ -29,6 +29,7 @@ function persistEvent(oauth2Client, event, callback) {
       callback(err)
     })
   } else {
+    console.log(event)
     callback(null)
   }
 }
@@ -60,10 +61,10 @@ function doesNotOverlap(allocatedEvent, calendarEvent) {
   const calStart = new Date(calendarEvent.start.dateTime).getTime()
   const calEnd = new Date(calendarEvent.end.dateTime).getTime()
 
-  const overlaps = (calStart < allocatedEvent.start) && (allocatedEvent.start < calEnd) ||
-                   (calStart < allocatedEvent.end) && (allocatedEvent.end < calEnd) ||
-                   (allocatedEvent.start < calStart) && (calStart < allocatedEvent.end) ||
-                   (allocatedEvent.end < calEnd) && (calEnd < allocatedEvent.end)
+  const overlaps = (calStart <= allocatedEvent.start) && (allocatedEvent.start <= calEnd) ||
+                   (calStart <= allocatedEvent.end) && (allocatedEvent.end <= calEnd) ||
+                   (allocatedEvent.start <= calStart) && (calStart <= allocatedEvent.end) ||
+                   (allocatedEvent.end <= calEnd) && (calEnd <= allocatedEvent.end)
   return !overlaps
 }
 
