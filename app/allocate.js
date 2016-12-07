@@ -29,6 +29,7 @@ function divvy(project, email, oauth2Client, callback) {
     var proposedStart = moment(userSettings.sleepTimes[1], ['hmm', 'hhmm'])
                               .add(adjustments[userSettings.bestTime], 'hours')
                               .add(moment().isDST() ? 1 : 0, 'hours')
+                              .add(moment().utcOffset(), 'minutes')
     if (proposedStart < moment()) { // if we are starting in the past
       proposedStart = proposedStart.add(24, 'hours')
       project.start = proposedStart.toDate()
