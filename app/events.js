@@ -16,17 +16,21 @@ function persistEvent(oauth2Client, event, callback) {
   const start = (new Date(event.start)).toISOString()
   const end = (new Date(event.end)).toISOString()
 
-  calendar.events.insert({
-    auth: oauth2Client,
-    calendarId: 'primary',
-    resource: {
-      start: { dateTime: start },
-      end: { dateTime: end },
-      summary: event.summary
-    }
-  }, (err) => {
-    callback(err)
-  })
+  if(process.argv[2] !== "no-push") {
+    calendar.events.insert({
+      auth: oauth2Client,
+      calendarId: 'primary',
+      resource: {
+        start: { dateTime: start },
+        end: { dateTime: end },
+        summary: event.summary
+      }
+    }, (err) => {
+      callback(err)
+    })
+  } else {
+    callback(null)
+  }
 }
 
 const ONE_DAY = 1000 * 60 * 60 * 24
