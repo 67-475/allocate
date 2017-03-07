@@ -6,7 +6,7 @@ var schema = {
   id: '/settings',
   type: 'object',
   format: 'notBackwards',
-  required: ['start', 'end', 'summary']
+  required: ['start', 'end', 'summary', 'calendar']
 }
 
 /**

@@ -16,17 +16,22 @@ function persistEvent(oauth2Client, event, callback) {
   const start = (new Date(event.start)).toISOString()
   const end = (new Date(event.end)).toISOString()
 
-  calendar.events.insert({
-    auth: oauth2Client,
-    calendarId: 'primary',
-    resource: {
-      start: { dateTime: start },
-      end: { dateTime: end },
-      summary: event.summary
-    }
-  }, (err) => {
-    callback(err)
-  })
+  if (process.argv[2] !== "no-push") {
+    calendar.events.insert({
+      auth: oauth2Client,
+      calendarId: 'primary',
+      resource: {
+        start: { dateTime: start },
+        end: { dateTime: end },
+        summary: event.summary
+      }
+    }, (err) => {
+      callback(err)
+    })
+  } else {
+    console.log(event)
+    callback(null)
+  }
 }
 
 const ONE_DAY = 1000 * 60 * 60 * 24
@@ -56,10 +61,10 @@ function doesNotOverlap(allocatedEvent, calendarEvent) {
   const calStart = new Date(calendarEvent.start.dateTime).getTime()
   const calEnd = new Date(calendarEvent.end.dateTime).getTime()
 
-  const overlaps = (calStart < allocatedEvent.start) && (allocatedEvent.start < calEnd) ||
-                   (calStart < allocatedEvent.end) && (allocatedEvent.end < calEnd) ||
-                   (allocatedEvent.start < calStart) && (calStart < allocatedEvent.end) ||
-                   (allocatedEvent.end < calEnd) && (calEnd < allocatedEvent.end)
+  const overlaps = (calStart <= allocatedEvent.start) && (allocatedEvent.start <= calEnd) ||
+                   (calStart <= allocatedEvent.end) && (allocatedEvent.end <= calEnd) ||
+                   (allocatedEvent.start <= calStart) && (calStart <= allocatedEvent.end) ||
+                   (allocatedEvent.end <= calEnd) && (calEnd <= allocatedEvent.end)
   return !overlaps
 }
 
